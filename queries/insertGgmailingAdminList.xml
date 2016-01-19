@@ -1,0 +1,16 @@
+<query id="insertGgmailingAdminList" action="insert">
+    <tables>
+        <table name="ggmailings" />
+    </tables>
+    <columns>
+
+        <column name="ggmailing_document_srl" var="document_srl" default="" />
+        <column name="ggmailing_title" var="title" default="" />
+        <column name="ggmailing_content" var="content" />
+        <column name="ggmailing_sender_nickname" var="sender_nickname" default="" />
+        <column name="ggmailing_sender_email" var="sender_email" default="" />
+        <column name="regdate" var="regdate" default="curdate()" />
+        
+    </columns>   
+
+</query>

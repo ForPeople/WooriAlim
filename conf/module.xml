@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+  <permissions>
+      <permission action="dispGgmailingAdminIndex" target="manager" />
+      <permission action="dispGgmailingAdminList" target="manager" />
+	  <permission action="dispGgmailingAdminSmsList" target="manager" />
+      <permission action="dispGgmailingAdminInsert" target="manager" />
+	  <permission action="dispGgmailingAdminSmsInsert" target="manager" />
+      <permission action="dispGgmailingAdminConfig" target="manager" />
+      <permission action="dispGgmailingAdminSend" target="manager" />
+	  <permission action="dispGgmailingAdminSmsSend" target="manager" />
+      <permission action="dispGgmailingAdminPreview" target="manager" />
+      <permission action="dispGgmailingAdminInsertmembers" target="manager" />
+	  <permission action="dispGgmailingAdminNotice" target="manager" />
+
+      <permission action="procGgmailingAdminSendMail" target="manager" />
+      <permission action="procGgmailingAdminModuleConfig" target="manager" />
+      <permission action="procGgmailingAdminInsert" target="manager" />
+      <permission action="procGgmailingAdminSmsInsert" target="manager" />
+      <permission action="procGgmailingAdminList" target="manager" />
+	  <permission action="procGgmailingAdminSmsList" target="manager" />
+      <permission action="procGgmailingAdminDel" target="manager" />
+      <permission action="procGgmailingAdminUpdate" target="manager" />
+      <permission action="procGgmailingAdminSmsUpdate" target="manager" />
+      <permission action="procGgmailingAdminSend" target="manager" />
+	  <permission action="procGgmailingAdminSmsSend" target="manager" />
+	  <permission action="procGgmailingAdminMemberInsert" target="manager" />
+	  <permission action="procGgmailingAdminMemberDelete" target="manager" />
+	  <permission action="procGgmailingAdminSendOk" target="manager" />
+	  <permission action="procGgmailingAdminSmsSendOk" target="manager" />
+	  <permission action="procGgmailingAdminAllSendOk" target="manager" />
+	  <permission action="procGgmailingAdminSmsAllSendOk" target="manager" />
+	  <permission action="procGgmailingAdminBoardmailingDelete" target="manager" />
+	  <permission action="procGgmailingAdminDBInsert" target="manager" />
+
+  </permissions>
+  <actions>
+    <action name="dispGgmailingAdminIndex" type="view" standalone="true" />
+    <action name="dispGgmailingAdminList" type="view" standalone="true" />
+	<action name="dispGgmailingAdminSmsList" type="view" standalone="true" />
+    <action name="dispGgmailingAdminInsert" type="view" standalone="true" />
+	<action name="dispGgmailingAdminSmsInsert" type="view" standalone="true" />
+    <action name="dispGgmailingAdminConfig" type="view" standalone="true" />
+    <action name="dispGgmailingAdminSend" type="view" standalone="true" />
+	<action name="dispGgmailingAdminSmsSend" type="view" standalone="true" />
+    <action name="dispGgmailingAdminPreview" type="view" standalone="true" />
+    <action name="dispGgmailingAdminInsertmembers" type="view" standalone="true" />
+	<action name="dispGgmailingAdminBoardMailing" type="view" standalone="true" />
+	<action name="dispGgmailingAdminNotice" type="view" standalone="true" admin_index="true" menu_name="ggmailing" menu_index="true" />
+   
+    <action name="procGgmailingAdminSendMail" type="controller" standalone="true" />
+    <action name="procGgmailingAdminModuleConfig" type="controller" standalone="true" />
+    <action name="procGgmailingAdminInsert" type="controller" standalone="true" />
+    <action name="procGgmailingAdminSmsInsert" type="controller" standalone="true" />
+    <action name="procGgmailingAdminList" type="controller" standalone="true" />
+    <action name="procGgmailingAdminSmsList" type="controller" standalone="true" />
+    <action name="procGgmailingAdminDel" type="controller" standalone="true" />
+    <action name="procGgmailingAdminUpdate" type="controller" standalone="true" />
+    <action name="procGgmailingAdminSmsUpdate" type="controller" standalone="true" />
+    <action name="procGgmailingAdminSend" type="controller" standalone="true" />
+	<action name="procGgmailingAdminSmsSend" type="controller" standalone="true" />
+	<action name="procGgmailingAdminMemberInsert" type="controller" standalone="true" />
+	<action name="procGgmailingAdminDBInsert" type="controller" standalone="true" />
+
+    <action name="procGgmailingInsert" type="controller" standalone="true" />
+    <action name="procGgmailingAdminMemberDelete" type="controller" standalone="true" />
+	<action name="procGgmailingAdminSendOk" type="controller" standalone="true" />
+	<action name="procGgmailingAdminSmsSendOk" type="controller" standalone="true" />
+	<action name="procGgmailingAdminAllSendOk" type="controller" standalone="true" />
+	<action name="procGgmailingAdminSmsAllSendOk" type="controller" standalone="true" />
+	
+	<action name="procGgmailingAdminBoardmailingDelete" type="controller" standalone="true" />
+
+	<action name="dispGgmailingDonotsend" type="view" />
+
+	<action name="procGgmailingBoardSendOk" type="controller" />
+	<action name="procGgmailingXeSend" type="controller" />
+	
+  </actions>
+  <menus>
+        <menu name="ggmailing">
+            <title xml:lang="en">Woori Notification</title>
+            <title xml:lang="ko">우리알림</title>
+            <title xml:lang="jp">Woori Notification</title>
+        </menu>
+  </menus>
+</module>

@@ -1,0 +1,10 @@
+<query id="deletetGgmailingAdminGateway" action="delete">
+    <tables>
+        <table name="ggmailing_gateways" />
+    </tables>
+    <columns>
+    </columns>   
+    <conditions>
+        <condition operation="equal" column="ggmailing_document_srl" var="ggmailing_document_srl" pipe="and" notnull="notnull" />
+    </conditions>
+</query>

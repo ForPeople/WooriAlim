@@ -1,0 +1,13 @@
+<table name="ggmailing_lists">
+  <column name="ggmailing_send_srl" type="number" size="11" notnull="notnull" auto_increment="auto_increment" primary_key="primary_key" />
+  <column name="ggmailing_document_srl" type="number" size="11" />
+  <column name="ggmailing_title" type="varchar" size="100" />
+  <column name="ggmailing_content" type="text" notnull="notnull" />
+  <column name="ggmailing_sender_nickname" type="varchar" size="100"  />
+  <column name="ggmailing_sender_email" type="varchar" size="100" />
+  <column name="ggmailing_receive_nickname" type="bigtext" />
+  <column name="ggmailing_receive_email" type="bigtext" />
+  <column name="ggmailing_member_regdate" type="bigtext" />
+  <column name="is_sendok" type="varchar" size="2" />
+  <column name="regdate" type="date" notnull="notnull" />
+</table>

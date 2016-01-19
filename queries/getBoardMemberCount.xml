@@ -1,0 +1,11 @@
+<query id="getBoardMemberCount" action="select">
+    <tables>
+        <table name="ggmailing_boards" />
+    </tables>
+    <columns>
+        <column name="*" />
+    </columns>   
+    <conditions>
+		<condition operation="equal" column="ggmailing_module_srl" var="ggmailing_module_srl" />
+    </conditions>
+</query>

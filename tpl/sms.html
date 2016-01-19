@@ -1,0 +1,212 @@
+<!--#include("./header.html")-->
+<!--@if(Context::get('ggmailing_sms_document_srl') && Context::get('ggstatus') == 'ggimage')-->
+<h3 class="sub_title">MMS 이미지 등록</h3>
+<form action="./" method="post" enctype="multipart/form-data">
+<input type="hidden" name="module" value="admin" />
+<input type="hidden" name="act" value="procGgmailingAdminSmsUpdate" />
+<input type="hidden" name="ggmailing_sms_document_srl" value="{Context::get('ggmailing_sms_document_srl')}" />
+<input type="hidden" name="ggmailing_sms_sender_nickname" value="{$args->ggmailing_sms_sender_nickname}" />
+<input type="hidden" name="ggmailing_sms_sender_number" value="{$args->ggmailing_sms_sender_number}" />
+<input type="hidden" name="ggmailing_sms_content" value="{strip_tags($args->ggmailing_sms_content)}" />
+{@
+		//MMS 파일 데이터 유무 확인
+		$mms_file1 = _XE_PATH_."files/ggmailing/mms/".$args->ggmailing_sms_document_srl."_mms_file1.jpg";
+		$mms_file2 = _XE_PATH_."files/ggmailing/mms/".$args->ggmailing_sms_document_srl."_mms_file2.jpg";
+		$mms_file3 = _XE_PATH_."files/ggmailing/mms/".$args->ggmailing_sms_document_srl."_mms_file3.jpg";
+		$fp1 = fopen($mms_file1,'r');
+		$fp2 = fopen($mms_file2,'r');
+		$fp3 = fopen($mms_file3,'r');
+}
+
+	<table class="info_table">
+		<tr>
+			<th>MMS 이미지 첨부</th>
+			<td>
+				<label>1번 이미지(jpg only)</label>
+				<input type="file" size="45" name="mms_file1" /><!--@if($fp1)--><img src="./files/ggmailing/mms/{$args->ggmailing_sms_document_srl}_mms_file1.jpg" />{round(filesize($mms_file1)/1024)} kbyte(s)<!--@else--><img src="./modules/ggmailing/tpl/img/noimage.jpg" style="display:none;" /><!--@end--><br />
+				<label>2번 이미지(jpg only)</label>
+				<input type="file" size="45" name="mms_file2" /><!--@if($fp2)--><img src="./files/ggmailing/mms/{$args->ggmailing_sms_document_srl}_mms_file2.jpg" />{round(filesize($mms_file2)/1024)} kbyte(s)<!--@else--><img src="./modules/ggmailing/tpl/img/noimage.jpg" style="display:none;" /><!--@end--><br />
+				<label>3번 이미지(jpg only)</label>
+				<input type="file" size="45" name="mms_file3" /><!--@if($fp3)--><img src="./files/ggmailing/mms/{$args->ggmailing_sms_document_srl}_mms_file3.jpg" />{round(filesize($mms_file3)/1024)} kbyte(s)<!--@else--><img src="./modules/ggmailing/tpl/img/noimage.jpg" style="display:none;" /><!--@end-->
+				<div>용량 합계 : {(round(filesize($mms_file1)/1024))+(round(filesize($mms_file2)/1024))+(round(filesize($mms_file3)/1024))} kbyte(s)<Br /><input type="submit" class="xet_btn medium gray" value="Upload" /></div>
+				</form>
+				<!--@if($fp1)-->
+				<form action="" method="post">
+				<input type="hidden" name="module" value="admin" />
+				<input type="hidden" name="act" value="procGgmailingAdminDel" />
+				<input type="hidden" name="ggmailing_sms_document_srl" value="{$val->ggmailing_sms_document_srl}" />
+				<input type="hidden" name="ggstatus" value="ggfiledel1" />
+				<input type="submit" class="xet_btn medium red" value="1번 이미지 {$lang->delete}" onclick="javascript:if(confirm('{$lang->wantdel}')) return; else return false;" />
+				</form>
+				<!--@end-->
+				<!--@if($fp2)-->
+				<form action="" method="post">
+				<input type="hidden" name="module" value="admin" />
+				<input type="hidden" name="act" value="procGgmailingAdminDel" />
+				<input type="hidden" name="ggmailing_sms_document_srl" value="{$val->ggmailing_sms_document_srl}" />
+				<input type="hidden" name="ggstatus" value="ggfiledel2" />
+				<input type="submit" class="xet_btn medium red" value="2번 이미지 {$lang->delete}" onclick="javascript:if(confirm('{$lang->wantdel}')) return; else return false;" />
+				</form>
+				<!--@end-->
+				<!--@if($fp3)-->
+				<form action="" method="post">
+				<input type="hidden" name="module" value="admin" />
+				<input type="hidden" name="act" value="procGgmailingAdminDel" />
+				<input type="hidden" name="ggmailing_sms_document_srl" value="{$val->ggmailing_sms_document_srl}" />
+				<input type="hidden" name="ggstatus" value="ggfiledel3" />
+				<input type="submit" class="xet_btn medium red" value="3번 이미지 {$lang->delete}" onclick="javascript:if(confirm('{$lang->wantdel}')) return; else return false;" />
+				</form>
+				<!--@end-->
+				<p class="ggm_example">
+					이미지 파일이 첨부되면 MMS 요금이 적용됩니다.<br />
+					JPG 이미지만 지원합니다.<br />
+					1개 이미지 파일은 40kbyte를 넘을 수 없으며 이미지 3개까지 업로드 가능하나 이미지 3개의 용량 총합이 60kbyte를 넘을 수 없습니다.
+				</p>
+			</td>
+		</tr>
+	</table>
+
+
+
+<!--@else-->
+<h3 class="sub_title">1.SMS/LMS/MMS 등록</h3>
+<div class="warnning">
+	<a href="https://spam.kisa.or.kr/kor/way/way04C.jsp" target="_blank">[광고전송가이드]</a>
+</div>
+<script>
+	function Limit(obj){
+		var count_obj = document.getElementById('ggcount');
+		var strSize = stringByteSize(obj.value);
+		if(strSize > 2000){
+			alert("내용은 " + maxLength + " 를 초과할 수 없습니다. 초과된 내용은 삭제됩니다.");
+			obj.value = obj.value.substring(0,2000);
+			count_obj.innerText = strSize;
+			return;
+		} else if(strSize > 90){
+			count_obj.innerText = '[LMS/MMS] ' + strSize + ' /2000';
+		} else {
+			count_obj.innerText = '[SMS] ' + strSize + ' /90';
+		}
+
+	}
+	function charByteSize(ch) {
+		if (ch == null || ch.length == 0) {
+			return 0;
+		}
+
+		var charCode = ch.charCodeAt(0);
+
+		if (charCode <= 0x00007F) {
+			return 1;
+		} else if (charCode <= 0x0007FF) {
+			return 2;
+		} else if (charCode <= 0x00FFFF) {
+			return 2;//sms 한글을 2바이트씩 먹도록 강제 설정
+		} else {
+			return 4;
+		}
+	}
+
+	// 문자열을 UTF-8로 변환했을 경우 차지하게 되는 byte 수를 리턴한다.
+	function stringByteSize(str) {
+		if (str == null || str.length == 0) {
+			return 0;
+		}
+		var size = 0;
+
+		for (var i = 0; i < str.length; i++) {
+			size += charByteSize(str.charAt(i));
+		}
+		return size;
+	}
+
+	//유효성 검사
+	function ggcheck() {
+		var frm = document.ggform;
+		if(frm.ggmailing_sms_sender_nickname.value=='') {
+			alert('관리자 닉네임은 필수입니다.');
+			frm.ggmailing_sms_sender_nickname.focus();
+			return false;
+		}
+		else if(frm.ggmailing_sms_sender_number.value=='') {
+			alert('관리자 전화번호는 필수입니다.');
+			frm.ggmailing_sms_sender_number.focus();
+			return false;
+		} else {
+			frm.submit();
+		}
+	}
+</script>
+<form action="./" method="post" name="ggform">
+	<input type="hidden" name="module" value="admin" />
+	<!--@if(Context::get('ggmailing_sms_document_srl'))-->
+	<input type="hidden" name="act" value="procGgmailingAdminSmsUpdate" />
+	<input type="hidden" name="ggmailing_sms_document_srl" value="{Context::get('ggmailing_sms_document_srl')}" />
+	<!--@else-->
+	<input type="hidden" name="act" value="procGgmailingAdminSmsInsert" />
+	<!--@end-->
+
+	<table class="info_table">
+		<tr>
+			<th><em><font color="red">*</font></em>발신자 정보 표시</th>
+			<td>
+				<label>관리자 닉네임 : </label>
+				<input type="text" id="ggmailing_sms_sender_nickname" name="ggmailing_sms_sender_nickname" value="{$args->ggmailing_sms_sender_nickname}" />
+				<p class="ggm_example">
+					관리자 자신의 닉네임을 입력합니다. 치환변수에 사용됩니다. 기본)sms_nickname
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<th><em><font color="red">*</font></em>발신자 정보 표시</th>
+			<td>
+				<label>관리자 전화번호 : </label>	
+				<input type="text" id="ggmailing_sms_sender_number" name="ggmailing_sms_sender_number" value="{$args->ggmailing_sms_sender_number}" />
+				<p class="ggm_example">
+					관리자 자신의 전화번호를 반드시 입력합니다. 숫자만 입력합니다. 예)01012345678
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<th>글자수 카운트</th>
+			<td><span id="ggcount">
+			{@
+				$ggstr = str_replace('<br />','',$args->ggmailing_sms_content);
+				$len = strlen($ggstr); 
+			}
+			<!--@for($i=$length=$j=0;$i<$len;$length++)-->
+				{@ $high = ord($ggstr[$i]);}
+				<!--@if($high < 0x80)-->
+				{@ $i += 1; $j += 1;}
+				<!--@elseif($high < 0xE0)-->
+				{@ $i += 2; $j += 2;}
+				<!--@elseif($high < 0xF0)-->
+				{@ $i += 3; $j += 2;}
+				<!--@else-->
+				{@ $i += 4; $j += 4;}
+				<!--@end-->
+			<!--@end-->
+			{$j?$j:'0'}
+			</span> byte(s)</td>
+		</tr>
+		<tr style="height:380px;">
+			<th><em><font color="red">*</font></em>내용 입력</th>
+			<td class="ggm_sms">
+				<div class="ggm_sms_wrap">
+				<textarea name="ggmailing_sms_content" id="ggmailing_sms_content" class="ggm_sms_textarea" onblur="Limit(this);" onkeyup="Limit(this);" placeholder="sms는 한글 45자 90byte, LMS/MMS는 한글 1,000자 2,000byte">{strip_tags($args->ggmailing_sms_content)}</textarea>
+				</div>
+				<p class="ggm_example">
+					입력된 SMS 내용은 줄바꿈을 포함하여 90 byte 를 넘을 수 없습니다.<br />
+					만약 초과된 경우 LMS 요금이 적용되고 최대 2,000 byte 를 넘을 수 없습니다.<br />
+					파일이 첨부되면 MMS 요금이 적용됩니다. 이때 내용 입력은 최대 2,000 byte 를 넘을 수 없습니다.<br />
+					작성 완료 후 수정하실 수 있습니다.<br />
+					html 태그를 사용할 수 없습니다.
+				</p>
+			</td>
+		</tr>
+	</table>
+	<div class="button_wrp"><a href="#" class="xet_btn medium blue" onclick="ggcheck()">내용 작성완료</a></div>
+	
+</form>
+<!--@end-->
+<!--#include("./footer.html")-->

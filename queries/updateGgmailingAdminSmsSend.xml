@@ -1,0 +1,12 @@
+<query id="updateGgmailingAdminSmsSend" action="update">
+    <tables>
+        <table name="ggmailing_list_smss" />
+    </tables>
+    <columns>
+        <column name="is_sendok" var="is_sendok" default="N" />
+    </columns>   
+    <conditions>
+      <condition operation="equal" column="ggmailing_sms_send_srl" var="ggmailing_sms_send_srl" />
+	  <condition operation="equal" column="is_sendok" var="is_sendok" pipe="or" />
+    </conditions>
+</query>

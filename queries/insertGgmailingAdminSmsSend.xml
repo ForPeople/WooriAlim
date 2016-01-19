@@ -1,0 +1,19 @@
+<query id="insertGgmailingAdminSmsSend" action="insert">
+    <tables>
+        <table name="ggmailing_list_smss" />
+    </tables>
+    <columns>
+
+        <column name="ggmailing_sms_document_srl" var="ggmailing_sms_document_srl" default="" />
+        <column name="ggmailing_sms_content" var="ggmailing_sms_content" default="" />
+        <column name="ggmailing_sms_sender_nickname" var="ggmailing_sms_sender_nickname" default="" />
+        <column name="ggmailing_sms_sender_number" var="ggmailing_sms_sender_number" default="" />
+        <column name="ggmailing_sms_receive_nickname" var="ggmailing_sms_receive_nickname" default="" />
+        <column name="ggmailing_sms_receive_number" var="ggmailing_sms_receive_number" default="" />
+		<column name="ggmailing_sms_member_regdate" var="ggmailing_sms_member_regdate" default="" />
+        <column name="is_sendok" var="is_sendok" default="N" />
+        <column name="regdate" var="regdate" default="curdate()" />
+        
+    </columns>   
+
+</query>

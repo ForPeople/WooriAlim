@@ -1,0 +1,149 @@
+<!--#include("./header.html")-->
+<!--@if(Context::get('type')!='status')-->
+<h3 class="sub_title">{$lang->send_list}</h3>
+<!--@else-->
+<h3 class="sub_title">메일전송 현황</h3>
+<!--@end-->
+<table class="index_table">
+<span>Total:{$total_count}, Page:{$page}/{$total_page}</span>
+	<thead>
+		<tr>
+			<th rowspan="2">no.</th>
+			<th>{$lang->sender_nickname}</th>
+			<th>{$lang->sender_email}</th>
+			<th>{$lang->regdate}</th>
+			<th>{$lang->receive_nickname}</th>
+			<th>{$lang->receive_email}</th>
+			<!--@if(Context::get('type')!='status')--><th>{$lang->send_start}</th><!--@else--><th>상태</th><!--@end-->
+			<th>{$lang->delete}</th>
+		</tr>
+		<tr style="border-bottom:1px solid #000;">
+			<th colspan="2">{$lang->title}</td>
+			<th colspan="6">{$lang->content}</td>
+		</tr>
+	</thead>
+	<tbody>
+		<!--@foreach($mail_info as $key => $val)-->
+		<tr style="border-top:2px solid #ddd;">
+			<td rowspan="2">{$key}</td>
+			<td>{cut_str($val->ggmailing_sender_nickname,8,'...')}</td>
+			<td>{cut_str($val->ggmailing_sender_email,10,'...')}</td>
+			<td>{zdate($val->regdate,'Y-m-d H:i:s')}</td>
+			<td>
+			{@ $nick_name = explode(',',$val->ggmailing_receive_nickname);	}
+			<!--@for($i=0;$nick_name[$i];$i++)-->
+			{@ $cnt = $i; }
+			<!--@end-->
+			{$nick_name[0]} 
+			<!--@if($config->sender_num > 1 && $nick_name[1])-->{$lang->outof} {$cnt}{$lang->persons}<!--@end-->
+			</td>
+			<td>
+			{@ $email_address = explode(',',$val->ggmailing_receive_email);	}
+			<!--@for($i=0;$email_address[$i];$i++)-->
+			{@ $cnt = $i; }
+			<!--@end-->
+			{$email_address[0]} 
+			<!--@if($config->sender_num > 1 && $email_address[1])-->{$lang->outof} {$cnt}{$lang->email}<!--@end-->
+			</td>
+			{@
+				$dmn = getFullUrl('');
+				$dmn = parse_url($dmn);
+				$domain = substr($dmn['host'] . $dmn['path'], 0, -1);
+				$domain = str_replace('www.','',$domain);
+			}
+
+			{@ $ggmailing_serv_url = $config->ggmailing_serv_url; }
+			<!--@if($config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl)--> {@ $ggmailing_ssl = 'http://'; $ggmailing_ssl_port = ''; } <!--@elseif($config->ggmailing_ssl == 'Y')--> {@ $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }<!--@end-->
+			{@
+				$url = $ggmailing_ssl . $ggmailing_serv_url . $ggmailing_ssl_port . '/index.php';
+				$post_data = array(
+						'act' => 'dispWwapimanagerRequest',
+						'authkey' => $config->ggmailing_authkey,
+						'mid' => 'auth_woorimail',
+						'domain' => $domain,
+						'type' => 'ggmailing',
+						'ggmailing_document_srl' => $val->ggmailing_document_srl,
+						'ggmailing_send_srl' => $val->ggmailing_send_srl
+				);
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL,$url);
+				curl_setopt($ch, CURLOPT_POST,1);
+				curl_setopt($ch, CURLOPT_POSTFIELDS,$post_data);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			}
+			<!--@if($config->ggmailing_ssl == 'Y')-->
+			{@
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+			}
+			<!--@end-->
+			{@
+				$response = curl_exec($ch);
+				$authcheck = json_decode($response);
+				curl_close($ch);
+			}
+			
+			<td width="60" class="center">
+				<!--@if($authcheck->is_sendok == 'Y')-->{$lang->send_complete}
+				<!--@elseif($authcheck->is_sendok == 'W')-->통신대기
+				<!--@elseif($authcheck->is_sendok == 'S')-->전송중
+				<!--@elseif($authcheck->is_sendok == 'E')-->오류
+				<!--@elseif(!$authcheck)-->서버점검중
+				<!--@else-->
+					<!--@if(Context::get('type')!='status')-->
+					<form action="./" method="post">
+					<input type="hidden" name="module" value="admin" />
+					<input type="hidden" name="act" value="procGgmailingAdminSendOk" />
+					<input type="hidden" name="ggmailing_send_srl" value="{$val->ggmailing_send_srl}" />
+					<input type="hidden" name="page" value="{$page}" />
+					<input type="submit" class="xet_btn medium light" value="{$lang->send_start}" />
+					</form>
+					<!--@else-->
+					전송안됨
+					<!--@end-->
+				<!--@end-->
+			</td>
+			
+			<td width="60" class="center">
+				<form action="./" method="post" name="delform_{$key}">
+				<input type="hidden" name="module" value="admin" />
+				<input type="hidden" name="act" value="procGgmailingAdminDel" />
+				<input type="hidden" name="ggmailing_send_srl" value="{$val->ggmailing_send_srl}" />
+				<a href="#" onclick="javascript:if(confirm('삭제하시겠습니까?')) document.delform_{$key}.submit(); else return false;" class="xet_btn medium red">{$lang->delete}</a>
+				</form>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">{cut_str($val->ggmailing_title,10,'...')}</td>
+			<td colspan="6">{cut_str(htmlspecialchars($val->ggmailing_content),150,'...')}</td>
+		</tr>
+		<!--@end-->
+	</table>
+</table>
+<!--@if(Context::get('type')!='status')-->
+<div style="width:100%;margin:10px 0 auto;text-align:right;">
+	<form action="./" method="post" name="sendall">
+	<input type="hidden" name="module" value="admin" />
+	<input type="hidden" name="act" value="procGgmailingAdminAllSendOk" />
+	<input type="hidden" name="page" value="{$page}" />
+	<a href="#" onclick="javascript:if(confirm('대기중인 모든 메일을 전송하시겠습니까?')) document.sendall.submit(); else return false;" class="xet_btn medium blue">모든 대기중인 메일을 전송</a>
+	</form>
+</div>
+<!--@end-->
+<form action="./" method="post" class="ggm_pagination">
+	<input type="hidden" name="error_return_url" value="" />
+	<input type="hidden" name="module" value="{$module}" />
+	<input type="hidden" name="act" value="{$act}" />
+	<ul>
+		<li class="disabled"|cond="!$page || $page == 1"><a href="{getUrl('page', '')}">&laquo; {$lang->first_page}</a></li>
+
+		<!--@while($page_no = $page_navigation->getNextPage())-->
+		{@$last_page = $page_no}
+		<li class="active"|cond="$page_no == $page"><a href="{getUrl('page', $page_no)}">{$page_no}</a></li>
+		<!--@end-->
+
+		<li class="disabled"|cond="$page == $page_navigation->last_page"><a href="{getUrl('page', $page_navigation->last_page)}" title="{$page_navigation->last_page}">{$lang->last_page} &raquo;</a></li>
+	</ul>
+</form>
+
+<!--#include("./footer.html")-->

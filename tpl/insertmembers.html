@@ -1,0 +1,290 @@
+<!--#include("./header.html")-->
+
+<h1>{$lang->insertmembers}</h1>
+
+<blockquote>그룹명은 회원모듈에서 <a href="{getUrl('','module','admin','act','dispMemberAdminGroupList')}">[회원 그룹 메뉴]</a>를 통해 그룹을 추가해 주시고,<br />
+추가하실 때 그룹명은 'm_그룹명' 의 형태를 취하시면 외부회원 전용 그룹명으로 자동 인식됩니다.<br />
+예) m_메일링회원그룹<br />
+외부회원은 정보의 성격상 모두 이메일 수신 허용으로 설정됩니다.<br />
+수신거부된 이메일은 전송되지 않습니다.</blockquote>
+<blockquote cond="0">SMS주소록을 추가하실 때 그룹명은 's_그룹명' 의 형태를 취하시면 SMS 전송 전용 그룹명으로 자동 인식됩니다.<br />
+예) s_sms회원그룹<br />
+휴대전화번호는 반드시 숫자만 입력합니다. 예)01012345678<br />
+엑셀에서 휴대전화번호 입력시 앞에 0 이 사라질 때는 컬럼의 속성을 '텍스트'로 변환하여 재 입력합니다.<br />
+엑셀파일에서 휴대전화번호를 입력하는 칸은 셀 서식에서 '텍스트' 를 선택해야 맨 앞에 0이 존재하게 됩니다.<br />
+DB 연동으로 휴대전화번호를 입력하는 기능은 지원하지 않습니다.</blockquote>
+
+<h3><b>1. 엑셀 업로드를 이용한 주소록 그룹</b></h3>
+<b><span style="color:red">*</span>엑셀에 입력하는 항목 : (메일링)닉네임, 이메일, m_그룹명 <block cond="0">/ (SMS)닉네임, 휴대전화번호, s_그룹명</block></b><br />
+<b><span style="color:red">*</span>엑셀 2007버전 이하는 (*.xls, *.xlsx), 엑셀2010버전 이상인경우 97-2003통합문서 (*.xls) 로 저장하세요</b>
+<form enctype="multipart/form-data" action="./" method="POST" id="" class="form">
+	<input type="hidden" name="MAX_FILE_SIZE" value="1000000000" />
+	<input type="hidden" name="module" value="admin" />
+	<input type="hidden" name="act" value="procGgmailingAdminMemberInsert" />
+	<input name="uploadedfile" type="file" required="required" />
+	<input class="xet_btn medium dark" type="submit" value="엑셀파일 업로드 실행" />
+</form>
+
+<script>
+	function c_cms(selectObj) {
+		var cc = selectObj.value;
+		document.getElementById('c_cms_txt').innerHTML = cc;
+
+		document.getElementById('c_cms_table').innerHTML = '';
+		document.getElementById('c_cms_nick').innerHTML = '';
+		document.getElementById('c_cms_email').innerHTML = '';
+		document.getElementById('c_cms_regdate').innerHTML = '';
+		
+		document.getElementById('cms_db_table').setAttribute('value','');
+		document.getElementById('cms_db_col_name').setAttribute('value','');
+		document.getElementById('cms_db_col_email').setAttribute('value','');
+		document.getElementById('cms_db_col_regdate').setAttribute('value','');
+		
+		if(cc == 'xpressengine') {
+			document.getElementById('c_cms_table').innerHTML = 'xe_member';
+			document.getElementById('c_cms_nick').innerHTML = 'nick_name';
+			document.getElementById('c_cms_email').innerHTML = 'email_address';
+			document.getElementById('c_cms_regdate').innerHTML = 'regdate';
+			
+			document.getElementById('cms_db_table').setAttribute('value','');
+			document.getElementById('cms_db_col_name').setAttribute('value','nick_name');
+			document.getElementById('cms_db_col_email').setAttribute('value','email_address');
+			document.getElementById('cms_db_col_regdate').setAttribute('value','regdate');
+
+		} else if(cc == 'gnuboard4') {
+			document.getElementById('c_cms_table').innerHTML = 'g4_member';
+			document.getElementById('c_cms_nick').innerHTML = 'mb_nick';
+			document.getElementById('c_cms_email').innerHTML = 'mb_email';
+			document.getElementById('c_cms_regdate').innerHTML = 'mb_datetime';
+			
+			document.getElementById('cms_db_table').setAttribute('value','');
+			document.getElementById('cms_db_col_name').setAttribute('value','mb_nick');
+			document.getElementById('cms_db_col_email').setAttribute('value','mb_email');
+			document.getElementById('cms_db_col_regdate').setAttribute('value','mb_datetime');
+
+		} else if(cc == 'gnuboard5') {
+			document.getElementById('c_cms_table').innerHTML = 'g5_member';
+			document.getElementById('c_cms_nick').innerHTML = 'mb_nick';
+			document.getElementById('c_cms_email').innerHTML = 'mb_email';
+			document.getElementById('c_cms_regdate').innerHTML = 'mb_datetime';
+			
+			document.getElementById('cms_db_table').setAttribute('value','');
+			document.getElementById('cms_db_col_name').setAttribute('value','mb_nick');
+			document.getElementById('cms_db_col_email').setAttribute('value','mb_email');
+			document.getElementById('cms_db_col_regdate').setAttribute('value','mb_datetime');
+
+		} else if(cc == 'wordpress') {
+			document.getElementById('c_cms_table').innerHTML = 'wp_users';
+			document.getElementById('c_cms_nick').innerHTML = 'display_name';
+			document.getElementById('c_cms_email').innerHTML = 'user_email';
+			document.getElementById('c_cms_regdate').innerHTML = 'user_registered';
+			
+			document.getElementById('cms_db_table').setAttribute('value','');
+			document.getElementById('cms_db_col_name').setAttribute('value','display_name');
+			document.getElementById('cms_db_col_email').setAttribute('value','user_email');
+			document.getElementById('cms_db_col_regdate').setAttribute('value','user_registered');
+
+		} else if(cc == 'kimsq') {
+			document.getElementById('c_cms_table').innerHTML = 'rb_s_mbrdata';
+			document.getElementById('c_cms_nick').innerHTML = 'nic';
+			document.getElementById('c_cms_email').innerHTML = 'email';
+			document.getElementById('c_cms_regdate').innerHTML = 'd_regis';
+			
+			document.getElementById('cms_db_table').setAttribute('value','');
+			document.getElementById('cms_db_col_name').setAttribute('value','nic');
+			document.getElementById('cms_db_col_email').setAttribute('value','email');
+			document.getElementById('cms_db_col_regdate').setAttribute('value','d_regis');
+
+		} else if(cc == 'etc') {
+			document.getElementById('c_cms_table').innerHTML = '멤버정보테이블';
+			document.getElementById('c_cms_nick').innerHTML = '40byte이하';
+			document.getElementById('c_cms_email').innerHTML = '250byte이하';
+			document.getElementById('c_cms_regdate').innerHTML = 'YYmmddHHiiss';
+			
+			document.getElementById('cms_db_table').setAttribute('value','');
+			document.getElementById('cms_db_col_name').setAttribute('value','');
+			document.getElementById('cms_db_col_email').setAttribute('value','');
+			document.getElementById('cms_db_col_regdate').setAttribute('value','');
+		}
+	}
+
+	function check() {
+		var frm = document.ggform;
+		if(frm.cms_db_group.value=='') {
+			alert('그룹명선택이 누락되었습니다.');
+			frm.cms_db_group.focus();
+			return false;
+		}
+		if(frm.cms_type.value=='') {
+			alert('CMS선택이 누락되었습니다.');
+			frm.cms_type.focus();
+			return false;
+		}
+		if(frm.cms_db_table.value=='') {
+			alert('DB테이블명이 누락되었습니다.');
+			frm.cms_db_table.focus();
+			return false;
+		}
+		if(frm.cms_db_col_name.value=='') {
+			alert('닉네임컬럼명이 누락되었습니다.');
+			frm.cms_db_col_name.focus();
+			return false;
+		}
+		if(frm.cms_db_col_email.value=='') {
+			alert('이메일컬럼명이 누락되었습니다.');
+			frm.cms_db_col_email.focus();
+			return false;
+		}
+		if(frm.cms_db_col_regdate.value=='') {
+			alert('등록일컬럼명이 누락되었습니다.');
+			frm.cms_db_col_regdate.focus();
+			return false;
+		}
+	}
+</script>
+
+<h3><b>2. DB 연동 주소록 그룹</b></h3>
+<b><span style="color:red">*</span>회원수가 너무 많아 입력이 잘 안될경우 엑셀 업로드를 이용하여 나눠 등록하세요</b><br />
+<form action="./" method="post" name="ggform">
+	<input type="hidden" name="module" value="admin" />
+	<input type="hidden" name="act" value="procGgmailingAdminDBInsert" />
+	<table class="index_table" style="text-align:center;">
+		<tr>
+			<th>그룹명선택</th>
+			<th>CMS선택</th>
+			<th>DB테이블명</th>
+			<th>닉네임컬럼명</th>
+			<th>이메일컬럼명</th>
+			<th>등록일컬럼명</th>
+			<th>연동</th>
+		</tr>
+		<script>
+			function c_group(selectObj) {
+				var gg = selectObj.value;
+				document.getElementById('c_group_txt').innerHTML = gg;
+			}
+		</script>
+		<tr>
+			<td>
+				<select name="cms_db_group" id="cms_db_group" style="width:120px;" onchange="c_group(this)">
+					<option value="" />==그룹선택==
+					<!--@foreach($groups as $key => $val)-->
+					{@ $m_group = explode('_',$val->title);}
+					<option value="{$val->title}" cond="$m_group[0] == 'm'" selected="selected"|cond="$args->cms_db_group == $val->title">{$val->title}</option>
+					<!--@end-->
+				</select>
+			</td>
+			<td>		
+				<select name="cms_type" id="cms_type" style="width:120px;" onchange="c_cms(this)">
+					<option value="" />==CMS선택==
+					<option value="xpressengine" />익스프레스엔진
+					<option value="gnuboard4" />그누보드4
+					<option value="gnuboard5" />그누보드5
+					<option value="wordpress" />워드프레스
+					<option value="kimsq" />킴스큐
+					<option value="etc" />기타
+				</select>
+			</td>
+			<td><input type="text" name="cms_db_table" id="cms_db_table" value="" style="width:80px;margin-top:10px;" /></td>
+			<td><input type="text" name="cms_db_col_name" id="cms_db_col_name" value="" style="width:80px;margin-top:10px;" /></td>
+			<td><input type="text" name="cms_db_col_email" id="cms_db_col_email" value="" style="width:80px;margin-top:10px;" /></td>
+			<td><input type="text" name="cms_db_col_regdate" id="cms_db_col_regdate" value="" style="width:80px;margin-top:10px;" /></td>
+			<td><input type="submit" value="연동" class="xet_btn medium dark" onclick="check()" />
+		</tr>
+		<tr>
+			<td><div id="c_group_txt"></div></td>
+			<td><div id="c_cms_txt"></div></td>
+			<td><div id="c_cms_table"></div></td>
+			<td><div id="c_cms_nick"></div></td>
+			<td><div id="c_cms_email"></div></td>
+			<td><div id="c_cms_regdate"></div></td>
+			<td>(입력예시)</td>
+		</tr>
+	</table>
+</form>
+
+<form action="./" method="POST" style="float:left;">
+	<span>Total:{$total_count}, Page:{$page}/{$total_page}</span>
+	<input type="hidden" name="act" value="dispGgmailingAdminInsertmembers" />
+	<input type="hidden" name="module" value="admin" />
+	<select name="ggmailing_group" style="margin-top:10px;">
+		<option>== 그룹 정렬 선택 ==</option>
+		<!--@foreach($groups as $key => $val)-->
+		{@ $m_group = explode('_',$val->title);}
+		<option value="{$val->title}" cond="$m_group[0] == 'm' || $m_group[0] == 's'" selected="selected"|cond="($args->ggmailing_group && $mail_info[$total_count]->ggmailing_group == $val->title) || $args->cms_db_group == $val->title">{$val->title}</option>
+		<!--@end-->
+	</select>
+
+	<input class="xet_btn medium blue" type="submit" value="그룹 정렬" />
+</form>
+
+<a href="{getUrl('','module','admin','act','dispGgmailingAdminInsertmembers')}" class="xet_btn medium dark" style="margin-top:8px;">취소</a>
+
+<form action="./" method="POST" style="float:right;">
+<input type="hidden" name="act" value="dispGgmailingAdminInsertmembers" />
+<input type="hidden" name="module" value="admin" />
+<select name="search_type" style="margin-top:10px; width:200px;">
+	<option value="nickname" selected="selected"|cond="!$args->search_type || $args->search_type=='nickname'" />닉네임
+	<option value="email" selected="selected"|cond="$args->search_type=='email'" />이메일 or 휴대전화번호
+</select>
+<input type="text" name="search_keyword" value="{$args->search_keyword}" style="margin-top:10px;" />
+<input class="xet_btn medium blue" type="submit" value="{$lang->cmd_search}" />
+</form>
+
+<table class="index_table">
+	<tr>
+		<th><span style="color:red">*</span>닉네임</th>
+		<th><span style="color:red">*</span>이메일 or 휴대전화번호</th>
+		<th><span style="color:red">*</span>그룹명</th>
+		<th>{$lang->regdate}</th>
+		<th>{$lang->delete}</th>
+	</tr>
+
+	<!--@foreach($mail_info as $key => $val)-->
+
+	<tr>
+		<td>{$val->ggmailing_nickname}</td>
+		<td>{$val->ggmailing_email}</td>
+		<td>{$val->ggmailing_group}</td>
+		<td>{zdate($val->ggmailing_regdate,'Y-m-d H:i:s')}</td>
+		<td width="40">
+		<form action="" method="post">
+		<input type="hidden" name="module" value="admin" />
+		<input type="hidden" name="act" value="procGgmailingAdminMemberDelete" />
+		<input type="hidden" name="ggmailing_member_srl" value="{$val->ggmailing_member_srl}" />
+		<input type="submit" class="xet_btn medium red" value="{$lang->delete}" onclick="javascript:if(confirm('{$lang->wantdel}')) return; else return false;" />
+		</form>
+		</td>
+	</tr>
+
+	<!--@end-->
+</table>
+
+<form action="./" class="ggm_pagination">
+	<input type="hidden" name="error_return_url" value="" />
+	<input type="hidden" name="module" value="{$module}" />
+	<input type="hidden" name="act" value="{$act}" />
+	<ul>
+		<li class="disabled"|cond="!$page || $page == 1"><a href="{getUrl('page', '')}">&laquo; {$lang->first_page}</a></li>
+
+		<!--@while($page_no = $page_navigation->getNextPage())-->
+		{@$last_page = $page_no}
+		<li class="active"|cond="$page_no == $page"><a  href="{getUrl('page', $page_no)}">{$page_no}</a></li>
+		<!--@end-->
+
+		<li class="disabled"|cond="$page == $page_navigation->last_page"><a href="{getUrl('page', $page_navigation->last_page)}" title="{$page_navigation->last_page}">{$lang->last_page} &raquo;</a></li>
+	</ul>
+</form>
+<form name="delgroup" action="./" method="post" style="float:right;">
+	<input type="hidden" name="module" value="admin" />
+	<input type="hidden" name="act" value="procGgmailingAdminMemberDelete" />
+	<select name="ggmailing_group" style="margin-top:10px;">
+		<option>== 그룹 단위 삭제 선택 ==</option>
+		<!--@foreach($groups as $key => $val)-->
+		{@ $m_group = explode('_',$val->title); }
+		<option value="{$val->title}" cond="$m_group[0] == 'm' || $m_group[0] == 's'">{$val->title}</option>
+		<!--@end-->
+	</select>
+	<span style="margin-top:20px;"><a href="#" onclick="javascript:if(confirm('삭제하시겠습니까?')) document.delgroup.submit(); else return false;" class="xet_btn medium red">그룹 단위 삭제</a></span>
+</form>
+<!--#include("./footer.html")-->

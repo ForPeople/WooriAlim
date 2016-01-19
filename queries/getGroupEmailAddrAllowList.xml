@@ -1,0 +1,17 @@
+<query id="getGroupEmailAddrAllowList" action="select">
+    <tables>
+        <table name="member" alias="member"/>
+        <table name="member_group_member" alias="member_group"/>
+    </tables>
+    <columns>
+        <column name="member.nick_name" />
+        <column name="member.allow_mailing" />
+        <column name="member.email_address" />
+		<column name="member.regdate" />
+    </columns>   
+    <conditions>
+        <condition operation="in" column="member_group.group_srl" var="group_srl" notnull="notnull" />
+        <condition operation="equal" column="member.allow_mailing" var="allow_mailing" notnull="notnull" pipe="and" />
+        <condition operation="equal" column="member.member_srl" var="member_group.member_srl" pipe="and" notnull="notnull" />
+    </conditions>
+</query>

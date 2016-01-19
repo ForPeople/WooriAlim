@@ -1,0 +1,94 @@
+<!--#include("./header.html")-->
+<h3 class="sub_title">2.SMS/LMS/MMS 세팅</h3>
+
+<table class="index_table">
+	<thead>
+		<tr>
+			<th width="50" rowspan="2">no.</th>
+			<th width="120">관리자닉네임</th>
+			<th rowspan="2">내용</th>
+			<th width="150">수신그룹 선택</th>
+			<th>{$lang->send_ready}</th>
+			<th width="60">이미지 첨부</th>
+			<th width="30" rowspan="2">이미지1</th>
+			<th width="30" rowspan="2">이미지2</th>
+			<th width="30" rowspan="2">이미지3</th>
+		 </tr>
+		 <tr>
+			<th width="120">관리자전화번호</th>
+			<th width="100">{$lang->regdate}</th>
+			<th width="60">{$lang->modify}</th>
+			<th width="60">{$lang->delete}</th>
+		 </tr>
+	</thead>
+	<tbody>
+		<!--@foreach($sms_info as $key => $val)-->
+		<form action="./" method="post" name="form_{$key}">
+		  <input type="hidden" name="module" value="admin" />
+		  <input type="hidden" name="act" value="procGgmailingAdminSmsList" />
+		  <input type="hidden" name="ggmailing_sms_document_srl" value="{$val->ggmailing_sms_document_srl}" />
+			<tr style="border-top:1px solid #ddd;">
+				<td rowspan="2">{$key}</td>
+				<td>{$val->ggmailing_sms_sender_nickname}</td>
+				<input type="hidden" name="ggmailing_sms_sender_nickname" value="{$val->ggmailing_sms_sender_nickname}" />
+				<td rowspan="2">{$val->ggmailing_sms_content}</td>
+				<input type="hidden" name="ggmailing_sms_content" value="{$val->ggmailing_sms_content}" />
+				<td align="center">
+					<select name="group_srl" style="width:130px;">
+						<option value="">=수신그룹선택=</option>
+					<!--@foreach($group_list as $v)-->
+						{@ $m_group = explode('_',$v->title);}
+						<option value="{$v->group_srl}" cond="$m_group[0] == 's'">{$v->title}</option>
+					<!--@end-->
+					</select>
+				</td>
+				<td class="center"><input type="submit" value="{$lang->send_ready}" class="xet_btn medium blue" /></td>
+				<td class="center"><a href="{getUrl('','module','admin','act','dispGgmailingAdminSmsInsert','ggmailing_sms_document_srl',$val->ggmailing_sms_document_srl,'ggstatus','ggimage')}" class="xet_btn medium gray">이미지 첨부</a></td>
+{@
+		//MMS 파일 데이터 유무 확인
+		$mms_file1 = _XE_PATH_."files/ggmailing/mms/".$val->ggmailing_sms_document_srl."_mms_file1.jpg";
+		$mms_file2 = _XE_PATH_."files/ggmailing/mms/".$val->ggmailing_sms_document_srl."_mms_file2.jpg";
+		$mms_file3 = _XE_PATH_."files/ggmailing/mms/".$val->ggmailing_sms_document_srl."_mms_file3.jpg";
+}
+			<td rowspan="2"><!--@if(fopen($mms_file1,'r'))--><img src="./files/ggmailing/mms/{$val->ggmailing_sms_document_srl}_mms_file1.jpg" /><!--@else--><img src="./modules/ggmailing/tpl/img/noimage.jpg" style="display:none;" /><!--@end--></td>
+			<td rowspan="2"><!--@if(fopen($mms_file2,'r'))--><img src="./files/ggmailing/mms/{$val->ggmailing_sms_document_srl}_mms_file2.jpg" /><!--@else--><img src="./modules/ggmailing/tpl/img/noimage.jpg" style="display:none;" /><!--@end--></td>
+			<td rowspan="2"><!--@if(fopen($mms_file3,'r'))--><img src="./files/ggmailing/mms/{$val->ggmailing_sms_document_srl}_mms_file3.jpg" /><!--@else--><img src="./modules/ggmailing/tpl/img/noimage.jpg" style="display:none;" /><!--@end--></td>
+			</tr>
+			<tr>
+				<td>{$val->ggmailing_sms_sender_number}</td>
+				<input type="hidden" name="ggmailing_sms_sender_number" value="{$val->ggmailing_sms_sender_number}" />
+				<td>{zdate($val->regdate,'Y-m-d H:i:s')}</td>
+				<td class="center"><a href="{getUrl('','module','admin','act','dispGgmailingAdminSmsInsert','ggmailing_sms_document_srl',$val->ggmailing_sms_document_srl)}" class="xet_btn medium gray">{$lang->modify}</a></td>
+				<td class="center">
+				</form>
+				<form action="" method="post">
+				<input type="hidden" name="module" value="admin" />
+				<input type="hidden" name="act" value="procGgmailingAdminDel" />
+				<input type="hidden" name="ggmailing_sms_document_srl" value="{$val->ggmailing_sms_document_srl}" />
+				<input type="submit" class="xet_btn medium red" value="{$lang->delete}" onclick="javascript:if(confirm('{$lang->wantdel}')) return; else return false;" />
+				</form>
+				</td>
+			</tr>
+		
+		<!--@end-->
+	</tbody>
+</table>
+
+
+<form action="./" method="post" class="ggm_pagination">
+	<input type="hidden" name="error_return_url" value="" />
+	<input type="hidden" name="module" value="{$module}" />
+	<input type="hidden" name="act" value="{$act}" />
+	<ul>
+		<li class="disabled"|cond="!$page || $page == 1"><a href="{getUrl('page', '')}">&laquo; {$lang->first_page}</a></li>
+
+		<!--@while($page_no = $page_navigation->getNextPage())-->
+		{@ $last_page = $page_no; }
+		<li class="active"|cond="$page_no == $page"><a  href="{getUrl('page', $page_no)}">{$page_no}</a></li>
+		<!--@end-->
+
+		<li class="disabled"|cond="$page == $page_navigation->last_page"><a href="{getUrl('page', $page_navigation->last_page)}" title="{$page_navigation->last_page}">{$lang->last_page} &raquo;</a></li>
+	</ul>
+</form>
+
+<!--#include("./footer.html")-->

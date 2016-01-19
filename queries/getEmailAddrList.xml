@@ -1,0 +1,11 @@
+<query id="getEmailAddrList" action="select">
+    <tables>
+        <table name="member" />
+    </tables>
+    <columns>
+        <column name="nick_name" />
+        <column name="allow_mailing" />
+        <column name="email_address" />
+		<column name="regdate" />
+    </columns>   
+</query>

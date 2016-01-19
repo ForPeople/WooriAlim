@@ -1,0 +1,9 @@
+<table name="ggmailings">
+  <column name="ggmailing_srl" type="number" size="11" notnull="notnull" auto_increment="auto_increment" primary_key="primary_key" />
+  <column name="ggmailing_document_srl" type="number" size="11" />
+  <column name="ggmailing_title" type="varchar" size="100" />
+  <column name="ggmailing_content" type="text" notnull="notnull" />
+  <column name="ggmailing_sender_nickname" type="varchar" size="50" />
+  <column name="ggmailing_sender_email" type="varchar" size="50" />
+  <column name="regdate" type="date" notnull="notnull" />
+</table>

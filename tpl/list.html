@@ -1,0 +1,93 @@
+<!--#include("./header.html")-->
+<h3 class="sub_title">{$lang->setup_send}</h3>
+
+<table class="index_table">
+<span>Total:{$total_count}, Page:{$page}/{$total_page}</span>
+	<thead>
+		<tr>
+			<th rowspan="2">no.</th>
+			<th>{$lang->sender_nickname}</th>
+			<th>{$lang->sender_email}</th>
+			<th>{$lang->regdate}</th>
+			<th>{$lang->select_group}</th>
+			<th>{$lang->mailing_allow}</th>
+			<th>{$lang->send_ready}</th>
+			<th>{$lang->modify}</td>
+			<th>{$lang->delete}</th>
+		 </tr>
+		 <tr>
+			<th colspan="2">{$lang->title}</th>
+			<th colspan="4">{$lang->content}</th>
+			<th colspan="2">{$lang->preview}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<!--@foreach($mail_info as $key => $val)-->
+		<form action="./" method="post" name="form_{$key}">
+		  <input type="hidden" name="module" value="admin" />
+		  <input type="hidden" name="act" value="procGgmailingAdminList" />
+		  <input type="hidden" name="sender_nickname" value="{$val->ggmailing_sender_nickname}" />
+		  <input type="hidden" name="sender_email" value="{$val->ggmailing_sender_email}" />
+		  <input type="hidden" name="ggmailing_document_srl" value="{$val->ggmailing_document_srl}" />
+			<tr style="border-top:2px solid #ddd;">
+				<td rowspan="2">{$key}</td>
+				<td>{cut_str($val->ggmailing_sender_nickname,8,'...')}</td>
+				<td>{cut_str($val->ggmailing_sender_email,10,'...')}</td>
+				<td>{zdate($val->regdate,'Y-m-d H:i:s')}</td>
+				<td>
+					<select name="group_srl" style="width:100px;">
+						<option value="all">{$lang->send_to_all}</option>
+					<!--@foreach($group_list as $v)-->	
+						{@ $m_group = explode('_',$v->title);}
+						<option value="{$v->group_srl}" cond="$m_group[0] != 's'">{$v->title}</option>
+					<!--@end-->
+					</select>
+				</td>
+				<td>
+					<select name="allow_mailing" style="width:170px;">
+						<option value="Y">{$lang->allow_mailing}</option>
+						<option value="N">{$lang->all_mailing}</option>
+					</select>
+				</td>
+				<td class="center"><input type="submit" value="{$lang->send_ready}" class="xet_btn medium blue" /></td>
+				<td width="60" class="center"><a href="{getUrl('','module','admin','act','dispGgmailingAdminInsert','ggmailing_document_srl',$val->ggmailing_document_srl)}" class="xet_btn medium gray">{$lang->modify}</a></td>
+				<td width="60" class="center">
+			<input type="hidden" name="title" value="{$val->ggmailing_title}" />
+			<input type="hidden" name="content" value="{htmlspecialchars($val->ggmailing_content)}" />
+		</form>
+				<form action="" method="post">
+				<input type="hidden" name="module" value="admin" />
+				<input type="hidden" name="act" value="procGgmailingAdminDel" />
+				<input type="hidden" name="ggmailing_document_srl" value="{$val->ggmailing_document_srl}" />
+				<input type="submit" class="xet_btn medium red" value="{$lang->delete}" onclick="javascript:if(confirm('{$lang->wantdel}')) return; else return false;" />
+				</form>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">{cut_str($val->ggmailing_title,10,'...')}</td>
+				<td colspan="4">{cut_str(htmlspecialchars($val->ggmailing_content),150,'...')}</td>
+				<td colspan="2" class="center"><a href="{getUrl('','module','admin','act','dispGgmailingAdminPreview','ggmailing_document_srl',$val->ggmailing_document_srl)}" class="xet_btn medium dark">{$lang->preview}</a></td>
+			</tr>
+		
+		<!--@end-->
+	</tbody>
+</table>
+
+
+<form action="./" class="ggm_pagination">
+	<input type="hidden" name="error_return_url" value="" />
+	<input type="hidden" name="module" value="{$module}" />
+	<input type="hidden" name="act" value="{$act}" />
+	<ul>
+		<li class="disabled"|cond="!$page || $page == 1"><a href="{getUrl('page', '')}">&laquo; {$lang->first_page}</a></li>
+
+		<!--@while($page_no = $page_navigation->getNextPage())-->
+		{@$last_page = $page_no}
+		<li class="active"|cond="$page_no == $page"><a  href="{getUrl('page', $page_no)}">{$page_no}</a></li>
+		<!--@end-->
+
+		<li class="disabled"|cond="$page == $page_navigation->last_page"><a href="{getUrl('page', $page_navigation->last_page)}" title="{$page_navigation->last_page}">{$lang->last_page} &raquo;</a></li>
+	</ul>
+</form>
+
+<!--#include("./footer.html")-->

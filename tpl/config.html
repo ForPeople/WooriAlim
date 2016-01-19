@@ -1,0 +1,196 @@
+<!--#include("./header.html")-->
+
+<h3 class="sub_title">{$lang->configure}</h3>
+
+<div>
+	<div class="warnning">{$lang->warning}</div>
+
+	<form action="./" method="post" class="x_form-horizontal">
+		<input type="checkbox" id="accept_agree" name="accept_agree" value="Y"|cond="$config->accept_agree == ''"  disabled="disabled"|cond="$config->accept_agree == 'Y'" checked="checked"|cond="$config->accept_agree == 'Y'" /> {$lang->accept_agree}
+		<!--@if($config->accept_agree == 'Y')--><input type="hidden" name="accept_agree" value="Y" /><!--@end-->
+</div>
+	<section class="section" id="form1"|cond="!$config->accept_agree">
+		<h2>{$lang->configure}</h2>
+		<p>{$lang->must_insert}</p>
+
+		<input type="hidden" name="module" value="ggmailing" />
+		<input type="hidden" name="act" value="procGgmailingAdminModuleConfig" />
+		<input type="hidden" name="sender_num" value='2000' />
+
+			<table class="info_table">
+				<tr>
+					<script>
+						function serv_checked() {
+							var x = document.getElementById("myServ1");
+							var y = document.getElementById("myServ2");
+							var z = document.getElementById("myPort80");
+							if(x.checked) document.getElementById("myServUrl").value = x.value;
+							else if(y.checked) document.getElementById("myServUrl").value = y.value;
+
+							if(z.checked) document.getElementById("myPort").value = '80';
+						}
+
+					</script>
+					<th width="200px" rowspan="2"><em><font color="red">*</font></em>대량 메일서비스 서버 선택</th>
+					<td>
+						<input id="myServ1" onchange="serv_checked()" type="radio" name="ggmailing_serv_url" value="woorimail.com" checked="checked"|cond="!$config->ggmailing_serv_url || $config->ggmailing_serv_url == 'woorimail.com'" /> 
+						<label>우리메일 공식 무료 서버</label>
+						<br />
+						<input id="myServ2" onchange="serv_checked()" type="radio" name="ggmailing_serv_url" value="URL을 입력하세요." checked="checked"|cond="$config->ggmailing_serv_url && $config->ggmailing_serv_url != 'woorimail.com'" /> 
+						<label>커스텀 대량메일 시스템 구축 서버</label><br />
+						URL : <input id="myServUrl" type="text" name="ggmailing_serv_url" value="{$config->ggmailing_serv_url}"|cond="$config->ggmailing_serv_url && $config->ggmailing_serv_url != 'woorimail.com'" value="woorimail.com"|cond="$config->ggmailing_serv_url == 'woorimail.com' || !$config->ggmailing_serv_url" />
+						<p class="ggm_example">URL을 공란으로 비워두시면 모듈이 작동하지 않습니다.</p>
+						<input type="radio" name="ggmailing_ssl" value="Y" checked="checked"|cond="$config->ggmailing_ssl == 'Y'" />
+						<label>SSL 보안전송 사용</label>
+						&nbsp;&nbsp;&nbsp;
+						<input type="radio" id="myPort80" onchange="serv_checked()" name="ggmailing_ssl" value="N" checked="checked"|cond="$config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl" />
+						<label>SSL 보안전송 미사용</label>
+						&nbsp;&nbsp;&nbsp;
+						(포트 : <input type="text" id="myPort" name="ggmailing_ssl_port" value="80"|cond="$config->ggmailing_ssl == 'N'" value="{$config->ggmailing_ssl_port}"|cond="$config->ggmailing_ssl == 'Y'" style="width:50px;" />)
+						<p class="ggm_example">무료서버 SSL 보안전송 사용시 포트 20080 을 반드시 입력합니다.</p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>메일 발송 서버</label> : <!--@if($config->ggmailing_ssl == 'Y')-->https://<!--@else-->http://<!--@end-->{$config->ggmailing_serv_url} (port:<!--@if($config->ggmailing_ssl == 'Y' && $config->ggmailing_ssl_port)-->{$config->ggmailing_ssl_port}<!--@elseif($config->ggmailing_ssl == 'N')-->80<!--@end-->)
+					</td>
+				</tr>
+				<tr>
+					<th width="200px"><em><font color="red">*</font></em>{$lang->insertauthkey}</th>
+					<td>
+						<input type="text" name="ggmailing_authkey" value="{$config->ggmailing_authkey}"|cond="!$config->ggmailing_authkey" value="{$config->ggmailing_authkey}"|cond="$config->ggmailing_authkey" class="input_text" /> 
+						{@
+							$dmn = getFullUrl('');
+							$dmn = parse_url($dmn);
+							$domain = substr($dmn['host'] . $dmn['path'], 0, -1);
+							$domain = str_replace('www.','',$domain);
+						}
+						<p>
+							{$lang->authcenter} : <a href="https://woorimail.com:20080/reg_serial" target="_blank">https://woorimail.com:20080/reg_serial</a> {$lang->insert_url} : {$domain}
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th width="200px">전용 서버 사용 여부</th>
+					<td>
+						<input type="radio" name="type_server" value="F" checked="checked"|cond="!$config->type_server || $config->type_server == 'F'" /> 
+						<label>전용 서버 사용 안함</label><br />
+						<input type="radio" name="type_server" value="Y" checked="checked"|cond="$config->type_server == 'Y'" /> 
+						<label>전용 서버 사용함</label>
+						<p class="ggm_example">
+							전용 서버를 설치하여 사용할지 여부를 선택합니다.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th width="200px">게시판 메일링 사용 여부</th>
+					<td>
+						<input type="radio" name="type_board_mailing" value="F" checked="checked"|cond="!$config->type_board_mailing || $config->type_board_mailing == 'F'" /> 
+						<label>게시판 메일링 사용 안함</label><br />
+						<input type="radio" name="type_board_mailing" value="Y" checked="checked"|cond="$config->type_board_mailing == 'Y'" /> 
+						<label>게시판 메일링 사용함</label>
+						<p class="ggm_example">
+							<a href="http://www.xpressengine.com/index.php?mid=download&package_id=22753306" target="_blank">게시판 메일링 위젯</a>을 사용할 것인지 여부를 선택합니다.<br />
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th width="200px">게시판 메일링 닉네임 설정</th>
+					<td>
+						<input type="text" name="type_board_mailing_nick" value="{$config->type_board_mailing_nick}" style="width:300px;" /><br />
+						<p class="ggm_example">
+							게시판 메일링에서 사용할 닉네임을 설정합니다.<br />
+							닉네임을 설정하지 않으면 본 홈페이지 도메인이 닉네임으로 전송됩니다.<br />
+							<xmp>닉네임<NOREPLY@woorimail.com></xmp>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th width="200px">게시판 메일링 메일문구 설정</th>
+					<td>
+						제목:<input type="text" name="input_board_mailing_subject" value="{$config->input_board_mailing_subject}" style="width:400px;" /><br />
+						내용:<textarea name="input_board_mailing_content" style="width:400px;">{$config->input_board_mailing_content}</textarea>
+						<p class="ggm_example">
+							메일로 전송되는 제목과 내용을 설정할 수 있습니다.<br />
+							치환변수) 게시판명 {board_title}, 글쓴이 닉네임 {nick_name}, 게시물 내용 {board_content}<br />
+							제목 예) [메일링] {board_title} 게시판 {nick_name}님의 게시물입니다.<br />
+							내용 예) {board_title} 게시판에 {nick_name} 님의 새 글이 등록되었습니다. {board_content}<br />
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th width="200px">XE 알림센터 Lite 연동 사용 여부</th>
+					<td>
+						<input type="radio" name="type_xe_notilite" value="F" checked="checked"|cond="!$config->type_xe_notilite || $config->type_xe_notilite == 'F'" /> 
+						<label>XE 알림센터 Lite 연동 사용 안함</label><br />
+						<input type="radio" name="type_xe_notilite" value="Y" checked="checked"|cond="$config->type_xe_notilite == 'Y'" /> 
+						<label>XE 알림센터 Lite 연동 사용함</label>
+						<p class="ggm_example">
+							<a href="http://www.xpressengine.com/index.php?mid=download&package_id=21374711" target="_blank">XE 알림센터 Lite 모듈</a> 연동을 사용할 것인지 여부를 선택합니다.<br />
+							알림 내역이 자동으로 메일로 전송됩니다.<br />
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th width="200px">XE 알림센터 Lite 연동 닉네임 설정</th>
+					<td>
+						<input type="text" name="type_xe_notilite_nick" value="{$config->type_xe_notilite_nick}" style="width:300px;" /><br />
+						<p class="ggm_example">
+							XE 알림센터 Lite 연동에서 사용할 닉네임을 설정합니다.<br />
+							닉네임을 설정하지 않으면 본 홈페이지 도메인이 닉네임으로 전송됩니다.<br />
+							<xmp>닉네임<NOREPLY@woorimail.com></xmp>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th width="200px">XE 코어 연동 사용 여부</th>
+					<td>
+						<input type="radio" name="type_xe_send" value="F" checked="checked"|cond="!$config->type_xe_send || $config->type_xe_send == 'F'" /> 
+						<label>XE 코어 연동 사용 안함</label><br />
+						<input type="radio" name="type_xe_send" value="Y" checked="checked"|cond="$config->type_xe_send == 'Y'" /> 
+						<label>XE 코어 연동 사용함</label>
+						<p class="ggm_example">
+							XE 코어 연동을 사용할 것인지 여부를 선택합니다.<br />
+							이 옵션을 사용하면 XE 코어에서 전송하는 이메일이 모두 우리알림으로 전송됩니다.<br />
+							회신 미지원 이메일 형태이며 파일첨부를 지원하지 않습니다.<br />
+							이 옵션 사용을 위한 XE 코어 수정 방법은 <a href="https://www.xpressengine.com/index.php?mid=tip&document_srl=22887633" target="_blank"><b>[여기]</b></a> 를 참고하시기 바랍니다.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th width="200px">XE 코어 연동시 닉네임 설정</th>
+					<td>
+						<input type="text" name="type_xe_send_nick" value="{$config->type_xe_send_nick}" style="width:300px;" /><br />
+						<p class="ggm_example">
+							XE 코어 연동시 사용할 닉네임을 설정합니다.<br />
+							닉네임을 설정하지 않으면 본 홈페이지 도메인이 닉네임으로 전송됩니다.<br />
+							<xmp>닉네임<NOREPLY@woorimail.com></xmp>
+						</p>
+					</td>
+				</tr>
+			</table>
+
+		<div class="button_wrp"><input class="xet_btn medium blue" type="submit" value="{$lang->cmd_save}" /></div>
+
+	</form>
+	</section>
+
+
+<script>
+jQuery(function($) {
+	$("#form1").css("display","none");
+
+	$("#accept_agree").click(function(){
+		if ($("#accept_agree").is(":checked"))
+		{
+			$("#form1").show();
+		}
+		else
+		{
+			$("#form1").hide();
+		}
+	  });
+});
+</script>
+
+<!--#include("./footer.html")-->

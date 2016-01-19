@@ -1,0 +1,14 @@
+<query id="insertGgmailingAdminMember" action="insert">
+    <tables>
+        <table name="ggmailing_members" />
+    </tables>
+    <columns>
+
+        <column name="ggmailing_nickname" var="ggmailing_nickname" default="" />
+        <column name="ggmailing_email" var="ggmailing_email" default="" />
+        <column name="ggmailing_group" var="ggmailing_group" default="" />
+        <column name="ggmailing_regdate" var="regdate" default="curdate()" />
+        
+    </columns>   
+
+</query>

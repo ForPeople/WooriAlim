@@ -1,0 +1,42 @@
+<!--#include("./header.html")-->
+<h3 class="sub_title">{$lang->preview}</h3>
+
+<table cellspacing="0" border="0" class="mailing_table">
+	<tr>
+		<th width="100">{$lang->title}</th>
+		<td>
+			<!--@foreach($mail_info as $key => $val)-->
+				{$val->ggmailing_title}
+			<!--@end-->
+		</td>
+	</tr>
+	<tr>
+		<th>{$lang->content}</th>
+		<td>
+			{$config->mail_header}
+			<!--@foreach($mail_info as $key => $val)-->
+			{$val->ggmailing_content}
+			<!--@end-->
+			{$config->mail_footer}
+			{$config->mail_dontsend}
+			<!--@if($config->type_donotsend == 'cx')-->
+			<p class="ggm_example">	
+			귀하의 메일주소는 0000년 0월 0일, {getFullUrl('')} 에서 취득하였습니다.<br />
+			메일 수신을 원하지 않으시면, [수신거부]를 눌러주십시오. 수신거부처리가 이루어집니다.<br />
+			( If you don’t want to receive this e-mail anymore, click here.)
+			</p>
+			<!--@end-->
+			<!--@if($config->type_donotsend == 'co')-->
+			<p class="ggm_example">		
+			○○○님은 xxxx년xx월xx일 {getFullUrl('')} 에서 광고 수신에 동의하셨습니다.<br />
+			광고 수신을 원하지 않으시면, [수신거부]를 눌러주십시오. 수신거부처리가 이루어집니다.<br />
+			( If you don’t want to receive this e-mail anymore, click here)
+			</p>
+			<!--@end-->
+		</td>
+	</tr>
+</table>
+
+<div style="margin-top:20px;"><a href="javascript:history.back();" class="xet_btn medium light" >{$lang->back}</a></div>
+
+<!--#include("./footer.html")-->
