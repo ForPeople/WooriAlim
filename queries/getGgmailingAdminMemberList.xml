@@ -1,0 +1,21 @@
+<query id="getGgmailingAdminMemberList" action="select">
+    <tables>
+        <table name="ggmailing_members" />
+    </tables>
+    <columns>
+        <column name="*" />
+    </columns>   
+    <conditions>
+		<condition operation="equal" column="ggmailing_group" var="ggmailing_group" />
+		<group pipe="and">
+			<condition operation="like" column="ggmailing_nickname" var="ggmailing_nickname" />
+			<condition operation="like" column="ggmailing_email" var="ggmailing_email" pipe="or" />
+		</group>
+    </conditions>
+    <navigation>
+        <index var="sort_index" default="ggmailing_member_srl" order="desc" />
+        <list_count var="list_count" default="10" />
+        <page_count var="page_count" default="10" />
+        <page var="page" default="1" />
+    </navigation>
+</query>

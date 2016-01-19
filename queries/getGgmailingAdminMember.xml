@@ -1,0 +1,12 @@
+<query id="getGgmailingAdminMember" action="select">
+    <tables>
+        <table name="ggmailing_members" />
+    </tables>
+    <columns>
+        <column name="*" />
+    </columns>   
+    <conditions>
+		<condition operation="equal" column="ggmailing_group" var="ggmailing_group" />
+		<condition operation="equal" column="ggmailing_email" var="ggmailing_email" pipe="and" />
+    </conditions>
+</query>

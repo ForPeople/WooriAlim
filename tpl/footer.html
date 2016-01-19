@@ -1,0 +1,12 @@
+</div>
+<!--@if($args->mode == 'no_num')-->
+<script>alert('{$lang->no_num}');</script>
+<!--@elseif($args->mode == 'save_ok')-->
+<script>alert('{$lang->save_ok}');document.location.href="./index.php?module=admin&act=dispGgmailingAdminConfig";</script>
+<!--@end-->
+<!--@if($args->mode == 'notauth')-->
+	<script>alert('인증에 실패하였습니다.');document.location.href="./index.php?module=admin&act=dispGgmailingAdminConfig";</script>
+<!--@end-->
+<!--@if($args->mode == 'no_member')-->
+<script>alert('{$lang->no_member}');document.location.href="./index.php?module=admin&act=dispmailingAdminList";</script>
+<!--@end-->

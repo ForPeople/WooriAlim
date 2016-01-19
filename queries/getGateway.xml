@@ -1,0 +1,11 @@
+<query id="getGateway" action="select">
+    <tables>
+        <table name="ggmailing_gateways" />
+    </tables>
+    <columns>
+        <column name="*" />
+    </columns>   
+    <conditions>
+		<condition operation="equal" column="ggmailing_document_srl" var="ggmailing_document_srl" />
+    </conditions>
+</query>

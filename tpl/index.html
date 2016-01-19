@@ -1,0 +1,55 @@
+<!--#include("./header.html")-->
+<h2>{$lang->manual}</h2>
+
+<div class="infoText">
+	<blockquote>{nl2br($lang->about_mailing)}</blockquote>
+</div>
+
+<div class="warnning">
+	상업적 용도의 이메일은 반드시 합법적 스팸메일 작성 가이드 기준에 맞게 제목과 내용을 입력하셔야 합니다. <br />
+	만약 가이드에 맞지 않게 불법 스팸메일을 전송할 경우 발송자에게 민,형사상 책임이 발생할 수 있습니다.<br />
+	<a href="http://woorimail.com/105782" target="_blank">[합법적 스팸메일 작성 가이드]</a>
+</div>
+
+<table class="info_table">
+	<thead>
+		<tr>
+		  <th>{$lang->menutitle}</th>
+		  <td style="text-align:center;font-weight:bold;background:#f5f5f5">{$lang->desc}</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th>{$lang->manual_configure}</th>
+			<td>{$lang->manual_configure_content}</td>
+		</tr>
+	<!--@if($authcheck->type_member == 'G')-->
+		<tr>
+			<th>{$lang->manual_insert}</th>
+			<td>{$lang->manual_insert_content}</td>
+		</tr>
+		<tr>
+			<th>{$lang->manual_mailsetup}</th>
+			<td>{$lang->manual_mailsetup_content}</td>
+		</tr>
+		<tr>
+			<th>{$lang->manual_sendready}</th>
+			<td>{$lang->manual_sendready_content}</td>
+		</tr>
+		<tr>
+			<th>{$lang->manual_insertmembers}</th>
+			<td>{$lang->manual_insertmembers_content}</td>
+		</tr>
+		<tr>
+			<th>{$lang->manual_changestr}</th>
+			<td>{$lang->manual_changestr_content}</td>
+		</tr>
+	<!--@end-->
+		<tr>
+			<th>{$lang->manual_boardmailing}</th>
+			<td>{$lang->manual_boardmailing_content}</td>
+		</tr>
+	</tbody>
+</table>
+
+<!--#include("./footer.html")-->

@@ -1,0 +1,12 @@
+<table name="ggmailing_list_smss">
+  <column name="ggmailing_sms_send_srl" type="number" size="11" notnull="notnull" auto_increment="auto_increment" primary_key="primary_key" />
+  <column name="ggmailing_sms_document_srl" type="number" size="11" />
+  <column name="ggmailing_sms_content" type="text" notnull="notnull" />
+  <column name="ggmailing_sms_sender_nickname" type="varchar" size="50"  />
+  <column name="ggmailing_sms_sender_number" type="varchar" size="30"  />
+  <column name="ggmailing_sms_receive_nickname" type="bigtext" />
+  <column name="ggmailing_sms_receive_number" type="bigtext" />
+  <column name="ggmailing_sms_member_regdate" type="bigtext" />
+  <column name="is_sendok" type="varchar" size="2" />
+  <column name="regdate" type="date" notnull="notnull" />
+</table>

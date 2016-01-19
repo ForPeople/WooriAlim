@@ -1,0 +1,131 @@
+<load target="css/style.css" />
+<load target="css/button.css" />
+<load target="css/woorimail.css" />
+{@
+// 버전 구하기
+$args->path = './modules/ggmailing';
+$oAutoinstallModel = getModel('autoinstall');
+$oModuleModel = getModel('module');
+$module_list = $oModuleModel->getModuleList();
+}
+<div class="x_page-header">
+	<h1>{$lang->mailing} v<!--@foreach($module_list as $key => $val)--><!--@if($val->path == './modules/ggmailing/')-->{$val->version}{@ $current_ver = $val->version; }<!--@end--><!--@end--></h1>
+	<!--@if($current_ver < $authcheck->check_ver)-->
+	<h3>최신버전 : v{$authcheck->check_ver}
+	<a href="{$authcheck->check_file}">[다운로드]</a>
+	<!--@end-->
+	</h3>
+</div>
+<div class="woorimail">
+	<div class="cols">
+		<div class="col2">
+			<h3>{$lang->mailing_status} <a href="//woorimail.com/payment" target="_blank">[결제 바로가기]</a></h3>
+			<div class="colwrap1">
+				<table class="table_line">
+					<tr>
+						<th scope="col">{$lang->pay_point}</th>
+						<td>{number_format($authcheck->pay_point?$authcheck->pay_point:0)}</td>
+					</tr>
+					<tr>
+						<th scope="col">{$lang->etc_point}</th>
+						<td>{number_format($authcheck->etc_point?$authcheck->etc_point:0)}</td>
+					</tr>
+					<tr>
+						<th scope="col">{$lang->free_point}</th>
+						<td>{number_format($authcheck->free_point?$authcheck->free_point:0)}</td>
+					</tr>
+					<tr>
+						<th scope="col">{$lang->promotion_point}</th>
+						<td>{number_format($authcheck->event_point?$authcheck->event_point:0)}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div class="col2">
+			<div class="colwrap2">
+				<div class="statewrap">
+					<div class="state_area">
+						<strong>{$lang->authcheck}</strong>
+						<div class="icon"><span class="error">{$authcheck->ggauth_check}</span></div>
+					</div>
+					<div class="state_area">
+						<strong>{$lang->paymail_ready}</strong>
+						<div class="num">{number_format($authcheck->paymail_wait?$authcheck->paymail_wait:0)}</div>
+					</div>
+					<div class="state_area">
+						<strong>{$lang->freemail_ready}</strong>
+						<div class="num">{number_format($authcheck->freemail_wait?$authcheck->freemail_wait:0)}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+<nav id="ggtopMenu" >
+    <ul>
+		<!--@if($authcheck->ggauth_check == 'OK' && $config->accept_agree == 'Y' && $authcheck->type_member == 'G')-->
+        <li class="ggtopMenuLi">
+            <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminNotice')}">공지</a>
+        </li>
+        <li>|</li>
+		<!--@end-->
+        <li class="ggtopMenuLi">
+            <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminIndex')}">{$lang->manual}</a>
+        </li>
+        <li>|</li>
+
+        <li class="ggtopMenuLi">
+            <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminConfig')}">{$lang->configure}</a>
+        </li>
+        <li>|</li>
+
+		<!--@if($authcheck->ggauth_check == 'OK' && $config->accept_agree == 'Y' && $authcheck->type_member == 'G')-->
+        <li class="ggtopMenuLi">
+            <a class="ggmenuLink" href="#">대량 EMAIL</a>
+            <ul class="ggsubmenu">
+                <li><a class="ggsubmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminInsert')}">{$lang->insert_mail}</a></li>
+                <li><a class="ggsubmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminList')}">{$lang->setup_send}</a></li>
+                <li><a class="ggsubmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminSend')}">{$lang->send_list}</a></li>
+            </ul>
+        </li>
+        <li>|</li>
+
+        <li class="ggtopMenuLi" cond="0">
+            <a class="ggmenuLink" href="#">대량 SMS/LMS/MMS</a>
+            <ul class="ggsubmenu">
+                <li><a class="ggsubmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminSmsInsert')}">1.등록</a></li>
+                <li><a class="ggsubmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminSmsList')}">2.세팅</a></li>
+                <li><a class="ggsubmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminSmsSend')}">3.전송</a></li>
+            </ul>
+        </li>
+        <li cond="0">|</li>
+
+        <li class="ggtopMenuLi">
+            <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminInsertmembers')}">{$lang->insertmembers}</a>
+        </li>
+        <li>|</li>
+
+        <li class="ggtopMenuLi">
+            <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminBoardMailing')}">{$lang->boardmailing}</a>
+        </li>
+		<!--
+        <li>|</li>
+
+        <li class="ggtopMenuLi">
+            <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispNcenterliteAdminList')}">알림목록</a>
+        </li>
+		<li>|</li>
+
+        <li class="ggtopMenuLi">
+            <a class="ggmenuLink" href="http://woorimail.com/send_result" target="_blank">메일발송내역</a>
+        </li>
+		-->
+		<!--@end-->
+    </ul>
+</nav>
+
+<div class="ggm_mailing">

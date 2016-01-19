@@ -1,0 +1,24 @@
+<!--#include("./header.html")-->
+
+<h3 class="sub_title">공지</h3>
+
+<table class="index_table">
+	<thead>
+		<tr>
+			<th style="width:50px;">번호</th>
+			<th>제목</th>
+			<th style="width:150px;">등록일</th>
+		</tr>
+	</thead>
+	<tbody>
+			<!--@for($i=0;$i<10;$i++)-->
+			<tr style="border-top:1px solid #ddd;">
+				<td style="text-align:center;">{$i+1}</td>
+				<td><a href="{$notice->url}?mid={$notice->mid}&document_srl={$notice->notice_no[$i]}" target="_blank">{$notice->notice_title[$i]}</a></td>
+				<td style="text-align:center;">{zdate($notice->notice_regdate[$i],'Y-m-d H:i:s')}</td>
+			</tr>
+			<!--@endfor-->
+	</tbody>
+</table>
+
+<!--#include("./footer.html")-->

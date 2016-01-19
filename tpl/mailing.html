@@ -1,0 +1,149 @@
+<!--#include("./header.html")-->
+<h3 class="sub_title">{$lang->insert_mail}</h3>
+
+<div class="warnning">
+	상업적 용도의 이메일은 반드시 합법적 스팸메일 작성 가이드 기준에 맞게 제목과 내용을 입력하셔야 합니다. <br />
+	만약 가이드에 맞지 않게 불법 스팸메일을 전송할 경우 발송자에게 민,형사상 책임이 발생할 수 있습니다.<br />
+	<a href="https://spam.kisa.or.kr/kor/jsp/down.jsp?filename=2011_%EC%82%AC%EC%97%85%EC%9E%90%EB%A5%BC_%EC%9C%84%ED%95%9C_%EB%B6%88%EB%B2%95%EC%8A%A4%ED%8C%B8%EB%B0%A9%EC%A7%80_%EC%95%88%EB%82%B4%EC%84%9C%28%EC%9D%B4%EB%A9%94%EC%9D%BC%29.pdf" target="_blank">[합법적 스팸메일 작성 가이드]</a>
+</div>
+
+<form action="./" method="post" name="ggform">
+  <input type="hidden" name="module" value="admin" />
+  <!--@if(Context::get('ggmailing_document_srl'))-->
+  <input type="hidden" name="act" value="procGgmailingAdminUpdate" />
+  <input type="hidden" name="type_replymail" value="F"|cond="$args->ggmailing_sender_email == 'NOREPLY@woorimail.com' || !$args->ggmailing_sender_email" value="Y"|cond="$args->ggmailing_sender_email == 'SERVICE@woorimail.com'" />
+  <!--@else-->
+  <input type="hidden" name="act" value="procGgmailingAdminInsert" />
+  <!--@end-->
+
+	<table cellspacing="0" border="0" class="info_table">
+		<thead>
+
+<!--@if($config->type_server != 'Y')-->
+			<tr>
+				<th rowspan="2">{$lang->type_replymail}</th>
+				<td>
+					<input type="radio" name="type_replymail" value="F" checked="checked"|cond="$args->ggmailing_sender_email == 'NOREPLY@woorimail.com' || !$args->sender_email" />
+					<label>{$lang->type_replymail_f}</label>
+					<p class="ggm_example">
+						이메일 전송시 회신이 되지 않습니다.<br />
+						보내는 이메일 주소는 <font color="red">설정한 닉네임{htmlspecialchars('<NOREPLY@woorimail.com>')}</font> 으로 표시됩니다.<br />
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="radio" name="type_replymail" value="Y" checked="checked"|cond="$args->ggmailing_sender_email == 'SERVICE@woorimail.com'" />
+					<label>회신가능 대량메일</label>
+					<p class="ggm_example">
+						이메일 전송시 우리메일(http://woorimail.com)에 가입한 정보 이메일 주소로 회신주소가 설정됩니다.<br />
+						보내는 이메일 주소는 <font color="red"><!--@if($config->ggmailing_authkey)-->설정한 닉네임{htmlspecialchars('<SERVICE@woorimail.com>')}<!--@else-->[인증키를 먼저 입력해주세요!]<!--@end--></font> 으로 표시됩니다.<br />
+						메일을 받은분이 회신하실때는 <font color="red"><!--@if($config->ggmailing_authkey)-->{$authcheck->user_email}<!--@else-->[인증키를 먼저 입력해주세요!]<!--@end--></font> 이메일 주소로 회신됩니다.<br />
+						회신 이메일주소 수정 : <a href="http://woorimail.com/index.php?act=dispMemberInfo" target="_blank">[수정하러 가기]</a>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th>닉네임 설정</th>
+				<td>
+					<input style="margin:auto 0" type="text" name="sender_nickname" value="{$args->ggmailing_sender_nickname}" />
+					<xmp>이메일을 받을때 보낸사람 정보 "닉네임<NOREPLY@woorimail.com>" 형식에서 사용됩니다.</xmp>
+				</td>
+			</tr>
+<!--@elseif($config->type_server == 'Y')-->
+			<input type="hidden" name="type_replymail" value="G" />
+			<tr>
+				<th>회신받는 이메일 주소 설정</th>
+				<td>
+					<input type="hidden" name="type_replymail" value="G" />
+					<input type="text" name="ggmailing_sender_email" value="{$args->ggmailing_sender_email}" />
+					<label>예)webmaster@나의전용서버도메인.com</label>
+					<p class="ggm_example">
+						전용 서버일때만 사용 가능합니다.<br />
+						전용 서버가 아닌데 임의로 이메일 주소를 설정하면 메일이 나가지 않습니다.
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th>보내는 주소 설정</th>
+				<td>
+					from : <input style="margin:auto 0;width:150px;" type="text" name="sender_nickname" value="{$args->ggmailing_sender_nickname}" placeholder="닉네임" /> <<input style="margin:auto 0;width:100px;" type="text" name="is_nick" value="{$gw_args->ggmailing_is_nick}" placeholder="webmaster" />@<input style="margin:auto 0;width:150px;" type="text" name="is_domain" value="{$gw_args->ggmailing_is_domain}" placeholder="domain.com" />>
+					<xmp>이메일을 받을때 보낸사람 정보 "닉네임<webmaster@domain.com>" 형식에서 사용됩니다.</xmp>
+				</td>
+			</tr>
+<!--@else-->
+			<tr>
+				<th>알림!</th>
+				<td>전용 서버 설정을 확인해 주세요</td>
+			</tr>
+<!--@end-->
+			<tr>
+				<th>{$lang->title}<br />(한글100자이내)</th>
+				<td>
+					<input style="margin:auto 0" type="text" name="title" value="{$args->ggmailing_title}" class="input_text" maxlength="100" />
+				</td>
+			</tr>
+			<tr>
+				<th>{$lang->content}<br />(첨부파일 제외 한글2만자 이내)</th>
+				<td>				
+					{@
+					 $oEditorModel = &getModel('editor');
+					 
+					 // 에디터 스킨 목록을 구함
+					 Context::set('editor_skin_list', $oEditorModel->getEditorSkinList());
+					 
+					 // 에디터를 받음
+					 $option->primary_key_name = 'primary_key';
+					 $option->content_key_name = 'content';
+					 $option->allow_fileupload = true;
+					 $option->enable_autosave = false; 
+					 $option->enable_default_component = true;
+					 $option->enable_component = false;
+					 $option->resizable = true;
+					 $option->height = 300; 
+					 $option->skin = "xpresseditor";
+					 $editor = $oEditorModel->getEditor($args->ggmailing_document_srl, $option);
+					 //$editor->editor_sequence;
+					}
+					<input type="hidden" name="primary_key" id="primary_key" value="{$args->ggmailing_document_srl}">
+					<input type="hidden" name="content" id="content" value="{htmlspecialchars($args->ggmailing_content)}">
+
+					{$editor}
+				</td>
+			</tr>
+			<!--@if(!Context::get('ggmailing_document_srl'))-->
+			<tr>
+				<th rowspan="2">수신거부 표시 자동 삽입 선택</th>
+				<td>						
+					<input type="radio" name="type_donotsend" id="normal" value="cx" checked="checked">
+					<label for="normal">일반 수신거부 표시</label>	
+					<p class="ggm_example">					
+						(문구예시)<br />
+						귀하의 메일주소는 0000년 0월 0일, {getFullUrl('')} 에서 취득하였습니다.<br />
+						메일 수신을 원하지 않으시면, [수신거부]를 눌러주십시오. 수신거부처리가 이루어집니다.<br />
+						( If you don’t want to receive this e-mail anymore, click here.)
+					</p>
+				</td>
+			</tr>
+			<tr>					
+				<td>								
+					<input type="radio" name="type_donotsend" id="not_normal" value="co">
+					<label for="not_normal">광고동의(o) 수신거부 표시</label>
+					<p class="ggm_example">						
+						(문구예시)<br />
+						○○○님은 xxxx년xx월xx일 {getFullUrl('')} 에서 광고 수신에 동의하셨습니다.<br />
+						광고 수신을 원하지 않으시면, [수신거부]를 눌러주십시오. 수신거부처리가 이루어집니다.<br />
+						( If you don’t want to receive this e-mail anymore, click here)	
+					</p>
+				</td>
+					
+			</tr>
+			<!--@end-->
+		</thead> 
+	</table>
+	<div class="button_wrp"><input class="xet_btn medium blue" type="submit" value="등록" accesskey="s" /></div>
+	
+</form>
+
+
+<!--#include("./footer.html")-->

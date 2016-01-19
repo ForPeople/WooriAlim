@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ruleset version="1.5.0">
+    <customrules>
+    </customrules>
+    <fields>
+    <field name="sender_nickname" required="true" />
+		<field name="sender_email" required="true" rule="email" />
+		<field name="sender_num" required="true" rule="number" />
+    </fields>
+</ruleset>

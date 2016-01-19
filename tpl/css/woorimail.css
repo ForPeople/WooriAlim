@@ -1,0 +1,25 @@
+@charset "utf-8";
+
+.x_page-header > h1 .sub{color:#666;font-size:16px;font-weight:normal;}
+.woorimail{margin-bottom:50px;font-family:NanumGothic,'나눔 고딕',Malgun Gothic,'맑은 고딕',dotum,'돋움';}
+.woorimail .cols:after{clear:both;content:'';display:block;}
+.woorimail .cols .col2{height:120px;float:left;width:50%;}
+.woorimail .cols .col2 h3{margin:0 0 8px;color:#333;font-size:15px;font-weight:bold;}
+.woorimail .cols .colwrap1{margin-right:15px;}
+.woorimail .cols .colwrap2{margin-left:15px;margin:30px 0;}
+.woorimail .table_line{width:100%;border-top:2px solid #404040;border-collapse:collapse;border-spacing:0;}
+.woorimail .table_line th{width:30%;min-width:100px;height:27px;border-bottom:1px solid #404040;color:#333;font-weight:normal;text-align:center;background:#c1c1c1;line-height:1;}
+.woorimail .table_line td{color:#333;padding:0 0 0 15px;border-bottom:1px solid #404040;line-height:1;}
+.woorimail .statewrap{margin-left:-2%;margin-right:-3%;}
+.woorimail .statewrap:after{clear:both;content:'';display:block;}
+.woorimail .statewrap .state_area{float:left;width:30%;height:120px;margin-left:2%;border:1px solid #bdbdbd;border-radius:5px;box-shadow:1px 1px 3px #bdbdbd;}
+.woorimail .statewrap .state_area strong{display:block;height:27px;margin-bottom:12px;padding-top:10px;text-align:center;white-space:nowrap;background:#eee;border-bottom:1px solid #bdbdbd;}
+.woorimail .statewrap .state_area .icon span{display:block;width:60px;height:60px;border-radius:30px;margin:0 auto;text-align:center;line-height:58px;font-size:11px;white-space:nowrap;}
+.woorimail .statewrap .state_area .icon span.error{box-shadow:1px 1px 5px #ff897f, -1px -1px 5px #ff897f;}
+.woorimail .statewrap .state_area .icon span.normal{box-shadow:1px 1px 5px #7fffd4, -1px -1px 5px #7fffd4;}
+.woorimail .statewrap .state_area .num{padding-top:10px;text-align:center;white-space:nowrap;color:#333;font-size:38px;font-family:arial;font-weight:bold;line-height:40px;}
+
+<!--[if lt IE 9]>
+.woorimail .statewrap .state_area .icon span.error{background-color:#ff897f;}
+.woorimail .statewrap .state_area .icon span.normal{background-color:#7fffd4;}
+<![endif]-->

@@ -1,0 +1,19 @@
+<query id="insertGgmailingBoardMember" action="insert">
+    <tables>
+        <table name="ggmailing_boards" />
+    </tables>
+    <columns>
+		<column name="ggmailing_member_srl" var="ggmailing_member_srl" />
+		<column name="ggmailing_nickname" var="ggmailing_nickname" />
+		<column name="ggmailing_email" var="ggmailing_email" />
+		<column name="ggmailing_member_regdate" var="ggmailing_member_regdate" />
+
+		<column name="ggmailing_module_srl" var="ggmailing_module_srl" />
+		<column name="ggmailing_mid" var="ggmailing_mid" />
+		<column name="ggmailing_document_srl" var="ggmailing_document_srl" />
+		<column name="ggmailing_comment_srl" var="ggmailing_comment_srl" />
+
+        <column name="regdate" var="regdate" default="curdate()" />
+    </columns>   
+
+</query>

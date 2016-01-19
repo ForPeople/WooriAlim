@@ -1,0 +1,12 @@
+<query id="getFileAttach" action="select">
+    <tables>
+        <table name="files" />
+    </tables>
+    <columns>
+        <column name="source_filename" />
+        <column name="uploaded_filename" />
+    </columns>   
+    <conditions>
+        <condition operation="equal" column="upload_target_srl" var="primary_key" notnull="notnull" />
+    </conditions>
+</query>

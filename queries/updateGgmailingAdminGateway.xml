@@ -1,0 +1,13 @@
+<query id="updateGgmailingAdminGateway" action="update">
+    <tables>
+        <table name="ggmailing_gateways" />
+    </tables>
+    <columns>
+		<column name="ggmailing_is_nick" var="ggmailing_is_nick" />
+		<column name="ggmailing_is_domain" var="ggmailing_is_domain" />
+		<column name="last_update" var="last_update" />
+    </columns>   
+    <conditions>
+      <condition operation="equal" column="ggmailing_document_srl" var="document_srl" pipe="and" notnull="notnull" />
+    </conditions>
+</query>

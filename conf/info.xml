@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="0.2">
+  <title xml:lang="ko">우리알림</title>
+  <title xml:lang="en">WooRi Notification</title>
+  <title xml:lang="jp">WooRi Notification</title>
+  <description xml:lang="ko">우리알림 모듈 입니다.</description>
+  <description xml:lang="en">WooRi Notification Module</description>
+  <description xml:lang="jp">WooRi Notification モジュ-ル</description>
+  <version>0.4.1</version>
+  <date>2014-4-8</date>
+  <category>service</category>
+  <author email_address="xeadmin@forppl.com" link="http://xeadmin.com">
+    <name xml:lang="ko">GG</name>
+    <name xml:lang="en">GG</name>
+    <name xml:lang="jp">GG</name>
+  </author>
+</module>

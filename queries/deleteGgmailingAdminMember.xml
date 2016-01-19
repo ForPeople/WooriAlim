@@ -1,0 +1,11 @@
+<query id="deletetGgmailingAdminMember" action="delete">
+    <tables>
+        <table name="ggmailing_members" />
+    </tables>
+    <columns>
+    </columns>   
+    <conditions>
+        <condition operation="equal" column="ggmailing_member_srl" var="ggmailing_member_srl" />
+		<condition operation="equal" column="ggmailing_group" var="ggmailing_group" pipe="and" />
+    </conditions>
+</query>

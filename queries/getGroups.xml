@@ -1,0 +1,12 @@
+<query id="getGroups" action="select">
+    <tables>
+        <table name="member_group" />
+    </tables>
+    <columns>
+        <column name="group_srl" />
+        <column name="title" />
+    </columns>   
+    <navigation>
+        <index var="sort_index" default="group_srl" order="desc" />
+    </navigation>
+</query>

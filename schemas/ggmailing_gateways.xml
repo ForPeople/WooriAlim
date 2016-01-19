@@ -1,0 +1,8 @@
+<table name="ggmailing_gateways">
+	<column name="ggmailing_gateway_srl" type="number" size="11" notnull="notnull" auto_increment="auto_increment" primary_key="primary_key" />
+	<column name="ggmailing_document_srl" type="number" size="11" />
+	<column name="ggmailing_is_nick" type="varchar" size="50" />
+	<column name="ggmailing_is_domain" type="varchar" size="100" />
+	<column name="last_update" type="date" />
+	<column name="regdate" type="date" notnull="notnull" />
+</table>

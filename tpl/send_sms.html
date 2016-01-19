@@ -1,0 +1,192 @@
+<!--#include("./header.html")-->
+<!--@if(Context::get('type')!='status')-->
+<h3 class="sub_title">3.SMS/LMS/MMS 전송</h3>
+<!--@else-->
+<h3 class="sub_title">SMS/LMS/MMS 전송 현황</h3>
+<!--@end-->
+<table class="index_table">
+<span>Total:{$total_count}, Page:{$page}/{$total_page}</span>
+	<thead>
+		<tr>
+			<th width="20" rowspan="2">no.</th>
+			<th width="100">관리자 전화번호</th>
+			<th rowspan="2">내용</th>
+			<th width="30" rowspan="2">이미지1</th>
+			<th width="30" rowspan="2">이미지2</th>
+			<th width="30" rowspan="2">이미지3</th>
+			<th width="100" rowspan="2">{$lang->regdate}</th>
+			<th width="100" rowspan="2">수신 닉네임</th>
+			<th width="150" rowspan="2">수신 번호</th>
+			<th>타입</th>
+			<!--@if(Context::get('type')!='status')--><th>{$lang->send_start}</th><!--@else--><th>상태</th><!--@end-->
+			
+		</tr>
+		<tr>
+			<th width="100">관리자 닉네임</th>
+			<th width="80">예상비용</th>
+			<th>{$lang->delete}</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		<!--@foreach($sms_info as $key => $val)-->
+{@
+		//MMS 파일 데이터 유무 확인
+		$mms_file1 = _XE_PATH_."files/ggmailing/mms/".$val->ggmailing_sms_document_srl."_mms_file1.jpg";
+		$mms_file2 = _XE_PATH_."files/ggmailing/mms/".$val->ggmailing_sms_document_srl."_mms_file2.jpg";
+		$mms_file3 = _XE_PATH_."files/ggmailing/mms/".$val->ggmailing_sms_document_srl."_mms_file3.jpg";
+}
+		<tr style="border-top:1px solid #ddd;">
+			<td rowspan="2">{$key}</td>
+			<td>{$val->ggmailing_sms_sender_number}</td>
+			<td rowspan="2">{$val->ggmailing_sms_content}</td>
+			<td rowspan="2"><!--@if(fopen($mms_file1,'r'))--><img src="./files/ggmailing/mms/{$val->ggmailing_sms_document_srl}_mms_file1.jpg" /><!--@else--><img src="./modules/ggmailing/tpl/img/noimage.jpg" style="display:none;" /><!--@end--></td>
+			<td rowspan="2"><!--@if(fopen($mms_file2,'r'))--><img src="./files/ggmailing/mms/{$val->ggmailing_sms_document_srl}_mms_file2.jpg" /><!--@else--><img src="./modules/ggmailing/tpl/img/noimage.jpg" style="display:none;" /><!--@end--></td>
+			<td rowspan="2"><!--@if(fopen($mms_file3,'r'))--><img src="./files/ggmailing/mms/{$val->ggmailing_sms_document_srl}_mms_file3.jpg" /><!--@else--><img src="./modules/ggmailing/tpl/img/noimage.jpg" style="display:none;" /><!--@end--></td>
+			<td rowspan="2">{zdate($val->regdate,'Y-m-d H:i:s')}</td>
+			<td rowspan="2">
+			{@ $nick_name = explode(',',$val->ggmailing_sms_receive_nickname);	}
+			<!--@for($i=0;$nick_name[$i];$i++)-->
+			{@ $cnt = $i; }
+			<!--@end-->
+			{$nick_name[0]} 
+			<!--@if($config->sender_num > 1 && $nick_name[1])-->{$lang->outof} {$cnt}{$lang->persons}<!--@end-->
+			</td>
+			<td rowspan="2">
+			{@ $sms_number = explode(',',$val->ggmailing_sms_receive_number);	}
+			<!--@for($i=0;$sms_number[$i];$i++)-->
+			{@ $cnt = $i; }
+			<!--@end-->
+			{$sms_number[0]} 
+			<!--@if($config->sender_num > 1 && $sms_number[1])-->{$lang->outof} {$cnt} 건<!--@end-->
+			</td>
+			{@
+				$ggstr = str_replace('<br />','',$val->ggmailing_sms_content);
+				$len = strlen($ggstr); 
+			}
+			<!--@for($i=$length=$j=0;$i<$len;$j++)-->
+				{@ $high = ord($ggstr[$i]);}
+				<!--@if($high < 0x80)-->
+				{@ $i += 1; $length += 1;}
+				<!--@elseif($high < 0xE0)-->
+				{@ $i += 2; $length += 2;}
+				<!--@elseif($high < 0xF0)-->
+				{@ $i += 3; $length += 2;}
+				<!--@else-->
+				{@ $i += 4; $length += 4;}
+				<!--@end-->
+			<!--@end-->
+
+			<td>
+				<!--@if(($length < 2000) && (fopen($mms_file1,'r') || fopen($mms_file2,'r') || fopen($mms_file3,'r')))-->{@ $ggtype = 'MMS'; }
+				<!--@elseif($length > 90 && $length < 2000)-->{@ $ggtype = 'LMS'; }
+				<!--@elseif($length <= 90)-->{@ $ggtype = 'SMS'; }
+				<!--@end-->
+				{$ggtype}
+			</td>
+			{@
+				$dmn = getFullUrl('');
+				$dmn = parse_url($dmn);
+				$domain = substr($dmn['host'] . $dmn['path'], 0, -1);
+				$domain = str_replace('www.','',$domain);
+			}
+
+			{@ $ggmailing_serv_url = $config->ggmailing_serv_url; }
+			<!--@if($config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl)--> {@ $ggmailing_ssl = 'http://'; $ggmailing_ssl_port = ''; } <!--@elseif($config->ggmailing_ssl == 'Y')--> {@ $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }<!--@end-->
+			{@
+				$url = $ggmailing_ssl . $ggmailing_serv_url . $ggmailing_ssl_port . '/index.php';
+				$post_data = array(
+						'act' => 'dispWwapimanagerRequest',
+						'authkey' => $config->ggmailing_authkey,
+						'mid' => 'auth_woorimail',
+						'domain' => $domain,
+						'type' => 'ggmailing',
+						'ggmailing_sms_send_srl' => $val->ggmailing_sms_send_srl,
+						'ggmailing_sms_srl' => $val->ggmailing_sms_document_srl
+				);
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL,$url);
+				curl_setopt($ch, CURLOPT_POST,1);
+				curl_setopt($ch, CURLOPT_POSTFIELDS,$post_data);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			}
+			<!--@if($config->ggmailing_ssl == 'Y')-->
+			{@
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+			}
+			<!--@end-->
+			{@
+				$response = curl_exec($ch);
+				$authcheck = json_decode($response);
+				curl_close($ch);
+			}
+			<td width="60" class="center">
+				<!--@if($authcheck->is_sendok == 'Y')-->{$lang->send_complete}
+				<!--@elseif($authcheck->is_sendok == 'W')-->통신대기
+				<!--@elseif($authcheck->is_sendok == 'S')-->전송중
+				<!--@elseif($authcheck->is_sendok == 'E')-->오류
+				<!--@elseif(!$authcheck)-->서버점검중
+				<!--@else-->
+					<!--@if(Context::get('type')!='status')-->
+					<!--@if($ggtype == 'SMS')-->{@ $ggpoint = 20*($cnt+1); }<!--@elseif($ggtype == 'LMS')-->{@ $ggpoint = 50*($cnt+1); }<!--@elseif($ggtype == 'MMS')-->{@ $ggpoint = 200*($cnt+1); }<!--@end-->
+						<!--@if(($authcheck->pay_point + $authcheck->event_point + $authcheck->etc_point)<(($cnt+1)*20))-->
+						{@ $point_need = $ggpoint-($authcheck->pay_point + $authcheck->event_point + $authcheck->etc_point); }
+						<script>alert('유료 포인트 {$point_need}포인트가 부족합니다.');</script>
+						<!--@end-->
+					<form action="./" method="post">
+					<input type="hidden" name="module" value="admin" />
+					<input type="hidden" name="act" value="procGgmailingAdminSmsSendOk" />
+					<input type="hidden" name="ggmailing_sms_send_srl" value="{$val->ggmailing_sms_send_srl}" />
+					<input type="hidden" name="page" value="{$page}" />
+					<input type="submit" class="xet_btn medium light" value="{$lang->send_start}" />
+					</form>
+					<!--@else-->
+					전송안됨
+					<!--@end-->
+				<!--@end-->
+			</td>
+		</tr>
+		<tr>
+			<td>{$val->ggmailing_sms_sender_nickname}</td>
+			<td><!--@if($ggtype == 'SMS')-->{20*($cnt+1)} p<!--@elseif($ggtype == 'LMS')-->{50*($cnt+1)} p<!--@elseif($ggtype == 'MMS')-->{200*($cnt+1)} p<!--@end-->
+			<td width="60" class="center">
+				<form action="./" method="post" name="delform_{$key}">
+				<input type="hidden" name="module" value="admin" />
+				<input type="hidden" name="act" value="procGgmailingAdminDel" />
+				<input type="hidden" name="ggmailing_sms_send_srl" value="{$val->ggmailing_sms_send_srl}" />
+				<a href="#" onclick="javascript:if(confirm('삭제하시겠습니까?')) document.delform_{$key}.submit(); else return false;" class="xet_btn medium red">{$lang->delete}</a>
+				</form>
+			</td>
+		</tr>
+		<!--@end-->
+		</tbody>
+	</table>
+</table>
+<!--@if(Context::get('type')!='status')-->
+<div style="width:100%;margin:10px 0 auto;text-align:right;">
+	<form action="./" method="post" name="sendall">
+	<input type="hidden" name="module" value="admin" />
+	<input type="hidden" name="act" value="procGgmailingAdminSmsAllSendOk" />
+	<input type="hidden" name="page" value="{$page}" />
+	<a href="#" onclick="javascript:if(confirm('대기중인 모든 메시지를 전송하시겠습니까?')) document.sendall.submit(); else return false;" class="xet_btn medium blue">모든 대기중인 메시지를 전송</a>
+	</form>
+</div>
+<!--@end-->
+
+<form action="./" method="post" class="ggm_pagination">
+	<input type="hidden" name="error_return_url" value="" />
+	<input type="hidden" name="module" value="{$module}" />
+	<input type="hidden" name="act" value="{$act}" />
+	<ul>
+		<li class="disabled"|cond="!$page || $page == 1"><a href="{getUrl('page', '')}">&laquo; {$lang->first_page}</a></li>
+
+		<!--@while($page_no = $page_navigation->getNextPage())-->
+		{@ $last_page = $page_no; }
+		<li class="active"|cond="$page_no == $page"><a href="{getUrl('page', $page_no)}">{$page_no}</a></li>
+		<!--@end-->
+
+		<li class="disabled"|cond="$page == $page_navigation->last_page"><a href="{getUrl('page', $page_navigation->last_page)}" title="{$page_navigation->last_page}">{$lang->last_page} &raquo;</a></li>
+	</ul>
+</form>
+<!--#include("./footer.html")-->

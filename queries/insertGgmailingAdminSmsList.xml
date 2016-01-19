@@ -1,0 +1,12 @@
+<query id="insertGgmailingAdminSmsList" action="insert">
+    <tables>
+        <table name="ggmailing_smss" />
+    </tables>
+    <columns>
+        <column name="ggmailing_sms_document_srl" var="ggmailing_sms_document_srl" default="" />
+        <column name="ggmailing_sms_content" var="ggmailing_sms_content" />
+        <column name="ggmailing_sms_sender_nickname" var="ggmailing_sms_sender_nickname" default="" />
+		<column name="ggmailing_sms_sender_number" var="ggmailing_sms_sender_number" default="" />
+        <column name="regdate" var="regdate" default="curdate()" />
+    </columns>   
+</query>

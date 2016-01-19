@@ -1,0 +1,14 @@
+<query id="insertDonotsend" action="insert">
+    <tables>
+        <table name="ggmailing_donotsends" />
+    </tables>
+    <columns>
+
+        <column name="ggmailing_member_srl" var="ggmailing_member_srl" default="" />
+        <column name="ggmailing_nickname" var="ggmailing_nickname" default="" />
+        <column name="ggmailing_email" var="ggmailing_email" default="" />
+        <column name="ggmailing_member_regdate" var="ggmailing_member_regdate" default="" />
+        <column name="regdate" var="regdate" />
+    </columns>   
+
+</query>

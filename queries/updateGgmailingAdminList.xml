@@ -1,0 +1,17 @@
+<query id="updateGgmailingAdminList" action="update">
+    <tables>
+        <table name="ggmailings" />
+    </tables>
+    <columns>
+
+        <column name="ggmailing_title" var="title" default="" />
+        <column name="ggmailing_content" var="content" />
+        <column name="ggmailing_sender_nickname" var="sender_nickname" default="" />
+        <column name="ggmailing_sender_email" var="sender_email" default="" />
+        <column name="regdate" var="regdate" default="curdate()" />
+        
+    </columns>   
+    <conditions>
+      <condition operation="equal" column="ggmailing_document_srl" var="document_srl" pipe="and" notnull="notnull" />
+    </conditions>
+</query>
