@@ -1,6 +1,7 @@
 <load target="css/style.css" />
 <load target="css/button.css" />
 <load target="css/woorimail.css" />
+
 {@
 // 버전 구하기
 $args->path = './modules/ggmailing';
@@ -9,13 +10,93 @@ $oModuleModel = getModel('module');
 $module_list = $oModuleModel->getModuleList();
 }
 <div class="x_page-header">
-	<h1>{$lang->mailing} v<!--@foreach($module_list as $key => $val)--><!--@if($val->path == './modules/ggmailing/')-->{$val->version}{@ $current_ver = $val->version; }<!--@end--><!--@end--></h1>
+	<h1>{$lang->woorialim} v<!--@foreach($module_list as $key => $val)--><!--@if($val->path == './modules/ggmailing/')-->{$val->version}{@ $current_ver = $val->version; }<!--@end--><!--@end--></h1>
 	<!--@if($current_ver < $authcheck->check_ver)-->
 	<h3>최신버전 : v{$authcheck->check_ver}
 	<a href="{$authcheck->check_file}">[다운로드]</a>
 	<!--@end-->
 	</h3>
 </div>
+{@
+	$dmn = getFullUrl('');
+	$dmn = parse_url($dmn);
+	$domain = substr($dmn['host'] . $dmn['path'], 0, -1);
+	$domain = str_replace('www.','',$domain);
+	
+	$ggmailing_serv_url = $config->ggmailing_serv_url;
+}
+<!--@if($config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl)--> {@ $ggmailing_ssl = 'http://'; $ggmailing_ssl_port = ''; } <!--@elseif($config->ggmailing_ssl == 'Y')--> { $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }<!--@end-->
+{@
+	$url = $ggmailing_ssl . $ggmailing_serv_url . $ggmailing_ssl_port . '/index.php';
+	
+	$post_data = array(
+			'act' => 'dispWwapimanagerRequest',
+			'authkey' => $config->ggmailing_authkey,
+			'mid' => 'auth_woorimail',
+			'domain' => $domain,
+			'type' => 'ggmailing'
+	);
+}
+<script>
+	jQuery(document).ready(function() {
+		var url = '{$url}';
+
+		var formData = new FormData();
+
+		var act = '{$post_data[act]}';
+		formData.append("act",act);
+		var authkey = '{$post_data[authkey]}';
+		formData.append("authkey",authkey);
+		var mid = '{$post_data[mid]}';
+		formData.append("mid",mid);
+		var domain = '{$post_data[domain]}';
+		formData.append("domain",domain);
+		var type = '{$post_data[type]}';
+		formData.append("type",type);
+
+		jQuery.ajax({
+			url: url,
+			type: 'POST',
+			data: formData,
+			async: true,
+			success: function (data) {
+				//alert(data);
+				var result = JSON.parse(data);
+				if(result.ggauth_check == 'OK') document.getElementById('ggauth_check').innerHTML = 'OK';
+				else document.getElementById('ggauth_check').innerHTML = '서버점검중';
+
+				if(result.free_point>0) document.getElementById('free_point').innerHTML = Number(result.free_point).toLocaleString('en');
+				else document.getElementById('free_point').innerHTML = '0';
+				if(result.pay_point>0) document.getElementById('pay_point').innerHTML = Number(result.pay_point).toLocaleString('en');
+				else document.getElementById('pay_point').innerHTML = '0';
+				if(result.event_point>0) document.getElementById('event_point').innerHTML = Number(result.event_point).toLocaleString('en');
+				else document.getElementById('event_point').innerHTML = '0';
+				if(result.etc_point>0) document.getElementById('etc_point').innerHTML = Number(result.etc_point).toLocaleString('en');
+				else document.getElementById('etc_point').innerHTML = '0';
+
+				if(result.freemail_wait>0) document.getElementById('freemail_wait').innerHTML = Number(result.freemail_wait).toLocaleString('en');
+				else document.getElementById('freemail_wait').innerHTML = '0';
+				if(result.paymail_wait>0) document.getElementById('paymail_wait').innerHTML = Number(result.paymail_wait).toLocaleString('en');
+				else document.getElementById('paymail_wait').innerHTML = '0';
+
+				jQuery("#ggnotice").show();
+				jQuery("#ggnotice2").show();
+				jQuery("#ggmail").show();
+				jQuery("#ggmail2").show();
+				jQuery("#ggmember").show();
+				jQuery("#ggmember2").show();
+				jQuery("#boardmailing").show();
+				jQuery("#boardmailing2").show();
+				jQuery("#donotsend").show();
+			},
+			global: false,
+			cache: false,
+			contentType: false,
+			processData: false
+		});
+		return false;
+	})
+</script>
 <div class="woorimail">
 	<div class="cols">
 		<div class="col2">
@@ -24,19 +105,19 @@ $module_list = $oModuleModel->getModuleList();
 				<table class="table_line">
 					<tr>
 						<th scope="col">{$lang->pay_point}</th>
-						<td>{number_format($authcheck->pay_point?$authcheck->pay_point:0)}</td>
+						<td><div id="pay_point"></div></td>
 					</tr>
 					<tr>
 						<th scope="col">{$lang->etc_point}</th>
-						<td>{number_format($authcheck->etc_point?$authcheck->etc_point:0)}</td>
+						<td><div id="etc_point"></div></td>
 					</tr>
 					<tr>
 						<th scope="col">{$lang->free_point}</th>
-						<td>{number_format($authcheck->free_point?$authcheck->free_point:0)}</td>
+						<td><div id="free_point"></div></td>
 					</tr>
 					<tr>
 						<th scope="col">{$lang->promotion_point}</th>
-						<td>{number_format($authcheck->event_point?$authcheck->event_point:0)}</td>
+						<td><div id="event_point"></div></td>
 					</tr>
 				</table>
 			</div>
@@ -47,15 +128,15 @@ $module_list = $oModuleModel->getModuleList();
 				<div class="statewrap">
 					<div class="state_area">
 						<strong>{$lang->authcheck}</strong>
-						<div class="icon"><span class="error">{$authcheck->ggauth_check}</span></div>
+						<div class="icon"><span class="error"><div id="ggauth_check"></div></span></div>
 					</div>
 					<div class="state_area">
 						<strong>{$lang->paymail_ready}</strong>
-						<div class="num">{number_format($authcheck->paymail_wait?$authcheck->paymail_wait:0)}</div>
+						<div class="num"><div id="paymail_wait"></div></div>
 					</div>
 					<div class="state_area">
 						<strong>{$lang->freemail_ready}</strong>
-						<div class="num">{number_format($authcheck->freemail_wait?$authcheck->freemail_wait:0)}</div>
+						<div class="num"><div id="freemail_wait"></div></div>
 					</div>
 				</div>
 			</div>
@@ -67,11 +148,11 @@ $module_list = $oModuleModel->getModuleList();
 
 <nav id="ggtopMenu" >
     <ul>
-		<!--@if($authcheck->ggauth_check == 'OK' && $config->accept_agree == 'Y' && $authcheck->type_member == 'G')-->
-        <li class="ggtopMenuLi">
+		<!--@if($config->accept_agree == 'Y')-->
+        <li class="ggtopMenuLi" style="display:none;" id="ggnotice">
             <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminNotice')}">공지</a>
         </li>
-        <li>|</li>
+        <li style="display:none;" id="ggnotice2">|</li>
 		<!--@end-->
         <li class="ggtopMenuLi">
             <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminIndex')}">{$lang->manual}</a>
@@ -83,8 +164,8 @@ $module_list = $oModuleModel->getModuleList();
         </li>
         <li>|</li>
 
-		<!--@if($authcheck->ggauth_check == 'OK' && $config->accept_agree == 'Y' && $authcheck->type_member == 'G')-->
-        <li class="ggtopMenuLi">
+		<!--@if($config->accept_agree == 'Y')-->
+        <li class="ggtopMenuLi" style="display:none;" id="ggmail">
             <a class="ggmenuLink" href="#">대량 EMAIL</a>
             <ul class="ggsubmenu">
                 <li><a class="ggsubmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminInsert')}">{$lang->insert_mail}</a></li>
@@ -92,7 +173,7 @@ $module_list = $oModuleModel->getModuleList();
                 <li><a class="ggsubmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminSend')}">{$lang->send_list}</a></li>
             </ul>
         </li>
-        <li>|</li>
+        <li style="display:none;" id="ggmail2">|</li>
 
         <li class="ggtopMenuLi" cond="0">
             <a class="ggmenuLink" href="#">대량 SMS/LMS/MMS</a>
@@ -104,26 +185,19 @@ $module_list = $oModuleModel->getModuleList();
         </li>
         <li cond="0">|</li>
 
-        <li class="ggtopMenuLi">
+        <li class="ggtopMenuLi" style="display:none;" id="ggmember">
             <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminInsertmembers')}">{$lang->insertmembers}</a>
         </li>
-        <li>|</li>
+        <li style="display:none;" id="ggmember2">|</li>
 
-        <li class="ggtopMenuLi">
+        <li class="ggtopMenuLi" style="display:none;" id="boardmailing">
             <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminBoardMailing')}">{$lang->boardmailing}</a>
         </li>
-		<!--
-        <li>|</li>
+        <li style="display:none;" id="boardmailing2">|</li>
 
-        <li class="ggtopMenuLi">
-            <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispNcenterliteAdminList')}">알림목록</a>
+		<li class="ggtopMenuLi" style="display:none;" id="donotsend">
+            <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminDonotsend')}">{$lang->donotsendlist}</a>
         </li>
-		<li>|</li>
-
-        <li class="ggtopMenuLi">
-            <a class="ggmenuLink" href="http://woorimail.com/send_result" target="_blank">메일발송내역</a>
-        </li>
-		-->
 		<!--@end-->
     </ul>
 </nav>

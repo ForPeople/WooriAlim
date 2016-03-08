@@ -1,7 +1,8 @@
 <?php
 // normal
+$lang->donotsendlist = '수신거부 관리';
 $lang->configure = '설정';
-$lang->boardmailing = '게시판 메일링 관리';
+$lang->boardmailing = '게시판 메일링/댓글알림/뉴스레터 관리';
 $lang->manual = '사용자 가이드';
 $lang->insertmembers = '외부회원 등록 및 관리';
 $lang->regdate = '등록일';
@@ -40,7 +41,7 @@ $lang->no_member = '메일을 발송할 회원이 없습니다.';
 $lang->save_ok = '저장되었습니다.';
 
 // header
-$lang->mailing = '우리알림';
+$lang->woorialim = '우리알림';
 $lang->mailing_status = '우리메일 서버 상황 및 나의 포인트';
 $lang->authcheck = '통신상태';
 $lang->paymail_ready = '유료메일 대기열';
@@ -52,7 +53,7 @@ $lang->pay_point = '유료 포인트';
 $lang->refresh = '상태 재확인';
 
 // index
-$lang->about_mailing = '1. 회원 가입시 이메일 주소가 정확하지 않으면 이메일이 도착하지 않습니다.
+$lang->about_woorialim = '1. 회원 가입시 이메일 주소가 정확하지 않으면 이메일이 도착하지 않습니다.
 2. 웹서버에 메일서버가 작동하지 않고 있어도 우리메일서버를 통해 메일이 전송됩니다.
 3. 첨부파일은 지원하지 않으며 본문에 링크를 첨부해서 메일 보내시기 바랍니다.(대량 메일 특성상 트래픽 문제가 발생할 수 있으니 웹호스팅 유저는 주의 바랍니다.) - 단독형
 4. 프로모션 포인트 > 무료 포인트 > 기타 포인트 > 유료 포인트 순으로 차감됩니다.
@@ -82,9 +83,11 @@ $lang->manual_changestr = '치환변수';
 $lang->manual_changestr_content = '제목과 내용등록 시 {nickname},{email} 치환변수를 사용하면<br />
 받는회원 닉네임과 이메일주소가 자동으로 삽입됩니다.<br />
 치환변수를 하나의 단어로 간주하고 html을 적용할 수 있습니다.<br />';
-$lang->manual_boardmailing = '게시판 메일링 관리';
+$lang->manual_boardmailing = '게시판 메일링/댓글알림/뉴스레터 관리';
 $lang->manual_boardmailing_content = '<a href=http://www.xpressengine.com/index.php?mid=download&package_id=22753306 target=_blank>게시판 메일링 위젯(GG Board Mailing Widget)</a> 을 이용하여 게시판 메일링을 구현할 수 있습니다.<br />
-게시판별 메일링 가입 회원을 관리합니다.';
+게시판 댓글알림 위젯(GG Ward Widget) 을 이용하여 게시판 댓글알림을 구현할 수 있습니다.<br />
+뉴스레터 위젯(GG Newsletter Widget) 을 이용하여 뉴스레터 메일링을 구현할 수 있습니다.<br />
+게시판별 메일링/댓글알림/뉴스레터 가입 회원을 관리합니다.';
 
 // list
 $lang->send_to_all = '전체보내기';

@@ -8,5 +8,6 @@
     <conditions>
 		<condition operation="equal" column="ggmailing_member_srl" var="ggmailing_member_srl" />
 		<condition operation="equal" column="ggmailing_module_srl" var="ggmailing_module_srl" pipe="and" />
+        <condition operation="equal" column="ggmailing_email" var="ggmailing_email" pipe="and" />
     </conditions>
 </query>
