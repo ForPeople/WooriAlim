@@ -77,6 +77,10 @@ class ggmailingController extends ggmailing
 		// 와드 사용여부 체크
 		if(!$config->type_ward || $config->type_ward == 'F') return false;
 
+		// mid 가 등록되어 있지 않으면 return false
+		$_ward_mid = explode(',',$config->ward_mid);
+		if(in_array($obj->mid,$_ward_mid) == false) return false;
+
 		$num = 2000;
 		$obj->is_sendok = 'D';
 		$args = new stdClass();
@@ -137,6 +141,11 @@ class ggmailingController extends ggmailing
 		// 게시판 메일링 사용 여부 체크
 		if(!$config->type_board_mailing || $config->type_board_mailing == 'F') return false;
 
+		// mid 가 등록되어 있지 않으면 return false
+		$_newsletter_mid = explode(',',$config->newsletter_mid);
+		$_boardmailing_mid = explode(',',$config->boardmailing_mid);
+		if(in_array($obj->mid,$_newsletter_mid) == false && in_array($obj->mid,$_boardmailing_mid) == false) return false;
+
 		$num = 2000;
 		$obj->is_sendok = 'M';
 		$args = new stdClass();
@@ -147,7 +156,6 @@ class ggmailingController extends ggmailing
 
 		if($output->data) {
 			// 뉴스레터인 경우
-			$_newsletter_mid = explode(',',$config->newsletter_mid);
 			if(in_array($obj->mid,$_newsletter_mid)) {
 				$obj->sender_nickname = $obj->nick_name ? $obj->nick_name : $config->ggmailing_serv_url;
 				$obj->sender_email = 'NOREPLY@woorimail.com';

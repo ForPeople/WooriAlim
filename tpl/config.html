@@ -91,6 +91,7 @@
 						<label>게시판 댓글알림 사용함</label>
 						<p class="ggm_example">
 							<a href="#" target="_blank">게시판 댓글알림 위젯</a>을 사용할 것인지 여부를 선택합니다.<br />
+							댓글 등록자 자신에게는 메일이 오지 않습니다.<br />
 						</p>
 					</td>
 				</tr>
@@ -102,6 +103,28 @@
 							게시판 댓글알림에서 사용할 닉네임을 설정합니다.<br />
 							닉네임을 설정하지 않으면 본 홈페이지 도메인이 닉네임으로 전송됩니다.<br />
 							<xmp>닉네임<NOREPLY@woorimail.com></xmp>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th width="200px">게시판 댓글알림 MID 설정</th>
+					<td>
+						<input type="text" name="ward_mid" value="{$config->ward_mid}" /> 
+						<p class="ggm_example">
+							게시판 댓글알림 MID 설정을 해야만 해당 게시판의 게시물의 댓글이 등록될 때 게시판 댓글알림이 작동합니다.<br />
+							다수의 게시판을 설정할 경우 컴머(,)를 이용해서 등록하세요.<br />
+							게시판 댓글알림 사용함을 함께 설정 해야 합니다.<br />
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th width="200px">게시판 메일링 MID 설정</th>
+					<td>
+						<input type="text" name="boardmailing_mid" value="{$config->boardmailing_mid}" /> 
+						<p class="ggm_example">
+							게시판 메일링 MID 설정을 해야만 해당 게시판의 게시물이 등록될 때 게시판 메일링이 작동합니다.<br />
+							다수의 게시판을 설정할 경우 컴머(,)를 이용해서 등록하세요.<br />
+							게시판 메일링 사용함을 함께 설정 해야 합니다.<br />
 						</p>
 					</td>
 				</tr>
