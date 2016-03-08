@@ -106,14 +106,27 @@
 					</td>
 				</tr>
 				<tr>
-					<th width="200px">게시판 메일링 사용 여부</th>
+					<th width="200px">뉴스레터 게시판 MID 설정</th>
+					<td>
+						<input type="text" name="newsletter_mid" value="{$config->newsletter_mid}" /> 
+						<p class="ggm_example">
+							뉴스레터 게시판 MID 설정을 하게 되면 설정된 게시판의 게시판 메일링은 제목/내용을 게시물 그대로 전송합니다.<br />
+							다수의 게시판을 설정할 경우 컴머(,)를 이용해서 등록하세요.<br />
+							게시판 메일링 사용함을 함께 설정 해야 합니다.<br />
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th width="200px">게시판메일링/뉴스레터 사용 여부</th>
 					<td>
 						<input type="radio" name="type_board_mailing" value="F" checked="checked"|cond="!$config->type_board_mailing || $config->type_board_mailing == 'F'" /> 
-						<label>게시판 메일링 사용 안함</label><br />
+						<label>게시판메일링/뉴스레터 사용 안함</label><br />
 						<input type="radio" name="type_board_mailing" value="Y" checked="checked"|cond="$config->type_board_mailing == 'Y'" /> 
-						<label>게시판 메일링 사용함</label>
+						<label>게시판메일링/뉴스레터 사용함</label>
 						<p class="ggm_example">
 							<a href="http://www.xpressengine.com/index.php?mid=download&package_id=22753306" target="_blank">게시판 메일링 위젯</a>을 사용할 것인지 여부를 선택합니다.<br />
+							<a href="#" target="_blank">뉴스레터 위젯</a>을 사용할 것인지 여부를 선택합니다.<br />
+							게시물 등록자 자신에게는 메일이 오지 않습니다.<br />
 						</p>
 					</td>
 				</tr>
@@ -124,6 +137,7 @@
 						<p class="ggm_example">
 							게시판 메일링에서 사용할 닉네임을 설정합니다.<br />
 							닉네임을 설정하지 않으면 본 홈페이지 도메인이 닉네임으로 전송됩니다.<br />
+							뉴스레터에는 적용되지 않습니다.<br />
 							<xmp>닉네임<NOREPLY@woorimail.com></xmp>
 						</p>
 					</td>
@@ -138,6 +152,7 @@
 							치환변수) 게시판명 {board_title}, 글쓴이 닉네임 {nick_name}, 게시물 내용 {board_content}<br />
 							제목 예) [메일링] {board_title} 게시판 {nick_name}님의 게시물입니다.<br />
 							내용 예) {board_title} 게시판에 {nick_name} 님의 새 글이 등록되었습니다. {board_content}<br />
+							뉴스레터에는 적용되지 않습니다.<br />
 						</p>
 					</td>
 				</tr>

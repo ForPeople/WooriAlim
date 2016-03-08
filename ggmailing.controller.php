@@ -144,57 +144,66 @@ class ggmailingController extends ggmailing
 
 		$output = executeQueryArray('ggmailing.getBoardMemberCount',$args);
 		if(!$output->toBool()) return $output;
-		
+
 		if($output->data) {
-			
-			$obj->sender_nickname = $config->type_board_mailing_nick ? $config->type_board_mailing_nick : $config->ggmailing_serv_url;
-			$obj->sender_email = 'NOREPLY@woorimail.com';
-			
-			//게시판명 구하기
-			$ggmodule_info = Context::get('module_info');
-			$obj->board_title = $ggmodule_info->browser_title;
+			// 뉴스레터인 경우
+			$_newsletter_mid = explode(',',$config->newsletter_mid);
+			if(in_array($obj->mid,$_newsletter_mid)) {
+				$obj->sender_nickname = $obj->nick_name ? $obj->nick_name : $config->ggmailing_serv_url;
+				$obj->sender_email = 'NOREPLY@woorimail.com';
+				$obj->foots = '<p><a href="'.getFullUrl('','mid',$obj->mid,'document_srl',$obj->document_srl,'comment_srl',$obj->comment_srl).'" target="_blank">[바로가기]</a></p><br /><br /><p>* 본 메일은 '.getFullUrl('').' 의 {nickname} 님께서 신청하신 뉴스레터에 의해서 전송되었습니다.</p>';
+				$obj->content = $obj->content . $obj->foots;
 
-			//설정한 제목과 내용으로 치환
-			$gg_b_title = str_replace('{board_title}',$obj->board_title,strip_tags($config->input_board_mailing_subject));
-			$gg_b_title = str_replace('{nick_name}',$obj->nick_name,$gg_b_title);
-			$gg_b_content = str_replace('{board_title}',$obj->board_title,$config->input_board_mailing_content);
-			$gg_b_content = str_replace('{nick_name}',$obj->nick_name,$gg_b_content);
-			$gg_b_content = str_replace('{board_content}',$obj->content,$gg_b_content);
-			$obj->title = $config->input_board_mailing_subject?$gg_b_title:'[메일링] '.$obj->title;
-			$obj->content = $config->input_board_mailing_content?$gg_b_content:'<p>'.$obj->board_title.' 게시판에 '.$obj->nick_name.' 님의 새 글이 등록되었습니다.</p>';
-			
-			$obj->foots = '<p><a href="'.getFullUrl('','mid',$obj->mid,'document_srl',$obj->document_srl,'comment_srl',$obj->comment_srl).'" target="_blank">[바로가기]</a></p><br /><br /><p>* 본 메일은 '.getFullUrl('').' 의 {nickname} 님께서 신청하신 메일링에 의해서 전송되었습니다. 더이상 메일링 알림을 받고 싶지 않으시다면 해당 사이트에 가셔서 메일링 취소 버튼을 누르시면 됩니다.</p>';
-			$obj->content = $obj->content . $obj->foots;
+			// 게시판 메일링인 경우
+			} else {
+				$obj->sender_nickname = $config->type_board_mailing_nick ? $config->type_board_mailing_nick : $config->ggmailing_serv_url;
+				$obj->sender_email = 'NOREPLY@woorimail.com';
+				
+				//게시판명 구하기
+				$ggmodule_info = Context::get('module_info');
+				$obj->board_title = $ggmodule_info->browser_title;
+
+				//설정한 제목과 내용으로 치환
+				$gg_b_title = str_replace('{board_title}',$obj->board_title,strip_tags($config->input_board_mailing_subject));
+				$gg_b_title = str_replace('{nick_name}',$obj->nick_name,$gg_b_title);
+				$gg_b_content = str_replace('{board_title}',$obj->board_title,$config->input_board_mailing_content);
+				$gg_b_content = str_replace('{nick_name}',$obj->nick_name,$gg_b_content);
+				$gg_b_content = str_replace('{board_content}',$obj->content,$gg_b_content);
+				$obj->title = $config->input_board_mailing_subject?$gg_b_title:'[메일링] '.$obj->title;
+				$obj->content = $config->input_board_mailing_content?$gg_b_content:'<p>'.$obj->board_title.' 게시판에 '.$obj->nick_name.' 님의 새 글이 등록되었습니다.</p>';
+				
+				$obj->foots = '<p><a href="'.getFullUrl('','mid',$obj->mid,'document_srl',$obj->document_srl,'comment_srl',$obj->comment_srl).'" target="_blank">[바로가기]</a></p><br /><br /><p>* 본 메일은 '.getFullUrl('').' 의 {nickname} 님께서 신청하신 메일링에 의해서 전송되었습니다. 더이상 메일링 알림을 받고 싶지 않으시다면 해당 사이트에 가셔서 메일링 취소 버튼을 누르시면 됩니다.</p>';
+				$obj->content = $obj->content . $obj->foots;
+			}
+
+			foreach($output->data as $key => $val) {
+				//수신거부 제외
+				$obj->ggmailing_nickname = str_replace(',','.',$val->ggmailing_nickname);
+				$obj->ggmailing_email = str_replace(',','.',$val->ggmailing_email);
+				$obj->ggmailing_member_regdate = str_replace(',','.',$val->ggmailing_member_regdate);
+				$ggoutput = executeQueryArray('ggmailing.getDonotsend',$obj);
+				// 자기 자신의 글은 알림 받지 않음
+				if(!$ggoutput->data && $obj->nick_name != $val->ggmailing_nickname && $obj->email_address != $val->ggmailing_email) {
+					// 받는닉네임 세팅
+					$obj->receive_nickname .= str_replace(',','',$val->ggmailing_nickname) . ',';
+					// 받는이메일 세팅
+					$obj->receive_email .= str_replace(',','',$val->ggmailing_email) . ',';
+					// 회원등록일 세팅
+					$obj->receive_member_regdate .= str_replace(',','',$val->ggmailing_member_regdate) . ',';
+
+					if((($key+1) % $num == 0) && $num) {
+						executeQuery('ggmailing.insertGgmailingAdminSend',$obj);
+						$obj->receive_nickname = '';
+						$obj->receive_email = '';
+						$obj->receive_member_regdate = '';
+					}//endif
+				} //endif
+			}//endforeach
+			if($num && $obj->receive_nickname && $obj->receive_email) {
+				executeQuery('ggmailing.insertGgmailingAdminSend',$obj);
+			}
+			$this->procGgmailingSendOK('M');
 		}
-
-		foreach($output->data as $key => $val) {
-			//수신거부 제외
-			$obj->ggmailing_nickname = str_replace(',','.',$val->ggmailing_nickname);
-			$obj->ggmailing_email = str_replace(',','.',$val->ggmailing_email);
-			$obj->ggmailing_member_regdate = str_replace(',','.',$val->ggmailing_member_regdate);
-			$ggoutput = executeQueryArray('ggmailing.getDonotsend',$obj);
-			// 자기 자신의 글은 알림 받지 않음
-			if(!$ggoutput->data && $obj->nick_name != $val->ggmailing_nickname && $obj->email_address != $val->ggmailing_email) {
-				// 받는닉네임 세팅
-				$obj->receive_nickname .= str_replace(',','',$val->ggmailing_nickname) . ',';
-				// 받는이메일 세팅
-				$obj->receive_email .= str_replace(',','',$val->ggmailing_email) . ',';
-				// 회원등록일 세팅
-				$obj->receive_member_regdate .= str_replace(',','',$val->ggmailing_member_regdate) . ',';
-
-				if((($key+1) % $num == 0) && $num) {
-					executeQuery('ggmailing.insertGgmailingAdminSend',$obj);
-					$obj->receive_nickname = '';
-					$obj->receive_email = '';
-					$obj->receive_member_regdate = '';
-				}//endif
-			} //endif
-		}//endforeach
-		if($num && $obj->receive_nickname && $obj->receive_email) {
-			executeQuery('ggmailing.insertGgmailingAdminSend',$obj);
-		}
-		$this->procGgmailingSendOK('M');
-
 	} //end function
 
 	function triggerNotiliteGgmailing(&$obj)
