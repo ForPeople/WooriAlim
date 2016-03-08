@@ -25,7 +25,7 @@ $module_list = $oModuleModel->getModuleList();
 	
 	$ggmailing_serv_url = $config->ggmailing_serv_url;
 }
-<!--@if($config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl)--> {@ $ggmailing_ssl = 'http://'; $ggmailing_ssl_port = ''; } <!--@elseif($config->ggmailing_ssl == 'Y')--> { $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }<!--@end-->
+<!--@if($config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl)--> {@ $ggmailing_ssl = 'http://'; $ggmailing_ssl_port = ''; } <!--@elseif($config->ggmailing_ssl == 'Y')--> {@ $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }<!--@end-->
 {@
 	$url = $ggmailing_ssl . $ggmailing_serv_url . $ggmailing_ssl_port . '/index.php';
 	
