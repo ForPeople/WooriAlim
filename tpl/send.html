@@ -1,9 +1,11 @@
 <!--#include("./header.html")-->
+
 <!--@if(Context::get('type')!='status')-->
 <h3 class="sub_title">{$lang->send_list}</h3>
 <!--@else-->
 <h3 class="sub_title">메일전송 현황</h3>
 <!--@end-->
+
 <table class="index_table">
 <span>Total:{$total_count}, Page:{$page}/{$total_page}</span>
 	<thead>
@@ -65,42 +67,64 @@
 						'ggmailing_document_srl' => $val->ggmailing_document_srl,
 						'ggmailing_send_srl' => $val->ggmailing_send_srl
 				);
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL,$url);
-				curl_setopt($ch, CURLOPT_POST,1);
-				curl_setopt($ch, CURLOPT_POSTFIELDS,$post_data);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			}
-			<!--@if($config->ggmailing_ssl == 'Y')-->
-			{@
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-			}
-			<!--@end-->
-			{@
-				$response = curl_exec($ch);
-				$authcheck = json_decode($response);
-				curl_close($ch);
-			}
-			
+			<script>
+				jQuery(document).ready(function() {
+					var url = '{$url}';
+
+					var formData = new FormData();
+
+					var act = '{$post_data[act]}';
+					formData.append("act",act);
+					var authkey = '{$post_data[authkey]}';
+					formData.append("authkey",authkey);
+					var mid = '{$post_data[mid]}';
+					formData.append("mid",mid);
+					var domain = '{$post_data[domain]}';
+					formData.append("domain",domain);
+					var type = '{$post_data[type]}';
+					formData.append("type",type);
+					var ggmailing_document_srl = '{$post_data[ggmailing_document_srl]}';
+					formData.append("ggmailing_document_srl",ggmailing_document_srl);
+					var ggmailing_send_srl = '{$post_data[ggmailing_send_srl]}';
+					formData.append("ggmailing_send_srl",ggmailing_send_srl);
+
+					jQuery.ajax({
+						url: url,
+						type: 'POST',
+						data: formData,
+						async: true,
+						success: function (data) {
+							//alert(data);
+							var result = JSON.parse(data);
+							if(result.is_sendok == 'Y') document.getElementById('ggstatus_{$key}').innerHTML = '{$lang->send_complete}';
+							else if(result.is_sendok == 'B') document.getElementById('ggstatus_{$key}').innerHTML = '대기열';
+							else if(result.is_sendok == 'W') document.getElementById('ggstatus_{$key}').innerHTML = '전송대기';
+							else if(result.is_sendok == 'S') document.getElementById('ggstatus_{$key}').innerHTML = '전송중';
+							else if(result.is_sendok == 'E') document.getElementById('ggstatus_{$key}').innerHTML = '오류';
+							else if(!result) document.getElementById('ggstatus_{$key}').innerHTML = '서버점검중';
+							else jQuery("#ggsend_{$key}").show();
+						},
+						global: false,
+						cache: false,
+						contentType: false,
+						processData: false
+					});
+					return false;
+				})
+			</script>
 			<td width="60" class="center">
-				<!--@if($authcheck->is_sendok == 'Y')-->{$lang->send_complete}
-				<!--@elseif($authcheck->is_sendok == 'W')-->통신대기
-				<!--@elseif($authcheck->is_sendok == 'S')-->전송중
-				<!--@elseif($authcheck->is_sendok == 'E')-->오류
-				<!--@elseif(!$authcheck)-->서버점검중
+				<div id="ggstatus_{$key}"></div>
+				<!--@if(Context::get('type')!='status')-->
+				<form action="./" method="post" id="ggsend_{$key}" style="display:none;">
+				<input type="hidden" name="module" value="admin" />
+				<input type="hidden" name="act" value="procGgmailingAdminSendOk" />
+				<input type="hidden" name="ggmailing_send_srl" value="{$val->ggmailing_send_srl}" />
+				<input type="hidden" name="page" value="{$page}" />
+				<input type="submit" class="xet_btn medium light" value="{$lang->send_start}" />
+				</form>
 				<!--@else-->
-					<!--@if(Context::get('type')!='status')-->
-					<form action="./" method="post">
-					<input type="hidden" name="module" value="admin" />
-					<input type="hidden" name="act" value="procGgmailingAdminSendOk" />
-					<input type="hidden" name="ggmailing_send_srl" value="{$val->ggmailing_send_srl}" />
-					<input type="hidden" name="page" value="{$page}" />
-					<input type="submit" class="xet_btn medium light" value="{$lang->send_start}" />
-					</form>
-					<!--@else-->
-					전송안됨
-					<!--@end-->
+				전송안됨
 				<!--@end-->
 			</td>
 			

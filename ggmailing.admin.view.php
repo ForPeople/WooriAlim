@@ -32,41 +32,7 @@ class ggmailingAdminView extends ggmailing
 		$config = $oModuleModel->getModuleConfig('ggmailing');
 		$this->config = $config;
 		Context::set('config', $config);
-		
-		$dmn = getFullUrl('');
-		$dmn = parse_url($dmn);
-		$domain = substr($dmn['host'] . $dmn['path'], 0, -1);
-		$domain = str_replace('www.','',$domain);
-		
-		$ggmailing_serv_url = $config->ggmailing_serv_url;
-		if($config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl) { $ggmailing_ssl = 'http://'; $ggmailing_ssl_port = ''; } elseif($config->ggmailing_ssl == 'Y') { $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }
-		$url = $ggmailing_ssl . $ggmailing_serv_url . $ggmailing_ssl_port . '/index.php';
-		
-		$post_data = array(
-				'act' => 'dispWwapimanagerRequest',
-				'authkey' => $config->ggmailing_authkey,
-				'mid' => 'auth_woorimail',
-				'domain' => $domain,
-				'type' => 'ggmailing'
-		);
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,$url);
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS,$post_data);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		if($config->ggmailing_ssl == 'Y') {
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		}
-		$response = curl_exec($ch);
-		$authcheck = json_decode($response);
-		$cinfo = curl_getinfo($ch);
-		$cerror = curl_error($ch);
-
-		if(!$authcheck->ggauth_check) $authcheck->ggauth_check = '서버점검중';
-		Context::set('authcheck',$authcheck);
-		curl_close($ch);
-
+	
 		$template_path = sprintf("%stpl/",$this->module_path);
 		$this->setTemplatePath($template_path);
 	}
@@ -104,43 +70,6 @@ class ggmailingAdminView extends ggmailing
 
 	function dispGgmailingAdminNotice() 
 	{
-		$oModuleModel = getModel('module');
-		$config = $oModuleModel->getModuleConfig('ggmailing');
-
-		$dmn = getFullUrl('');
-		$dmn = parse_url($dmn);
-		$domain = substr($dmn['host'] . $dmn['path'], 0, -1);
-		$domain = str_replace('www.','',$domain);
-		
-		$ggmailing_serv_url = $config->ggmailing_serv_url;
-		if($config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl) { $ggmailing_ssl = 'http://'; $ggmailing_ssl_port = ''; } elseif($config->ggmailing_ssl == 'Y') { $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }
-		$url = $ggmailing_ssl . $ggmailing_serv_url . $ggmailing_ssl_port . '/index.php';
-		$post_data = array(
-				'act' => 'dispWwapimanagerRequest',
-				'authkey' => $config->ggmailing_authkey,
-				'mid' => 'auth_woorimail',
-				'domain' => $domain,
-				'type' => 'ggmailing',
-				'notice_mid' => 'notice' // 공지를 mid 값으로 호출
-		);
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,$url);
-		curl_setopt($ch, CURLOPT_POST,1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS,$post_data);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		if($config->ggmailing_ssl == 'Y') {
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		}
-		$response = curl_exec($ch);
-		$authcheck = json_decode($response);
-
-		$notice = $authcheck;
-		$notice->url = $url;
-		$notice->mid = $post_data['notice_mid'];
-		Context::set('authcheck',$authcheck);
-		curl_close($ch);
-		Context::set('notice',$notice);
 		$this->setTemplateFile('notice');
 	}
 

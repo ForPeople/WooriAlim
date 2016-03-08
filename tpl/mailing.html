@@ -4,7 +4,7 @@
 <div class="warnning">
 	상업적 용도의 이메일은 반드시 합법적 스팸메일 작성 가이드 기준에 맞게 제목과 내용을 입력하셔야 합니다. <br />
 	만약 가이드에 맞지 않게 불법 스팸메일을 전송할 경우 발송자에게 민,형사상 책임이 발생할 수 있습니다.<br />
-	<a href="https://spam.kisa.or.kr/kor/jsp/down.jsp?filename=2011_%EC%82%AC%EC%97%85%EC%9E%90%EB%A5%BC_%EC%9C%84%ED%95%9C_%EB%B6%88%EB%B2%95%EC%8A%A4%ED%8C%B8%EB%B0%A9%EC%A7%80_%EC%95%88%EB%82%B4%EC%84%9C%28%EC%9D%B4%EB%A9%94%EC%9D%BC%29.pdf" target="_blank">[합법적 스팸메일 작성 가이드]</a>
+	<a href="http://woorimail.com/105782" target="_blank">[합법적 스팸메일 작성 가이드]</a>
 </div>
 
 <form action="./" method="post" name="ggform">
@@ -101,7 +101,7 @@
 					 $option->enable_component = false;
 					 $option->resizable = true;
 					 $option->height = 300; 
-					 $option->skin = "xpresseditor";
+					 $option->skin = "CKEditor" ? "CKEditor" : "xpresseditor";
 					 $editor = $oEditorModel->getEditor($args->ggmailing_document_srl, $option);
 					 //$editor->editor_sequence;
 					}
