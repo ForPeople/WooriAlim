@@ -3,6 +3,7 @@
 <div>
 - 게시판 메일링 회원은 Module Srl만 존재합니다.<br />
 - 댓글알림 회원은 Document Srl만 존재합니다.<br />
+- 뉴스레터 회원은 Module Srl만 존재하며 비회윈의 경우 Member Srl 이 '0'일수도 있습니다.<br />
 </div>
 <form action="./" method="POST" style="float:left;">
 <span>Total:{$total_count}, Page:{$page}/{$total_page}</span>
@@ -25,19 +26,24 @@
 			<th>{$lang->mid}</th>
 			<th>Module Srl</th>
 			<th>Document Srl</th>
+			<th>Member Srl</th>
 			<th>{$lang->regdate}</th>
 			<th>{$lang->delete}</th>
 		 </tr>
 	</thead>
 	<tbody>
 		<!--@foreach($bm_info as $key => $val)-->
+		{@
+			$_newsletter_mid = explode(',',$config->newsletter_mid);
+		}
 			<tr style="border-top:1px solid #ddd;">
 				<td>{$key}</td>
 				<td>{$val->ggmailing_nickname}</td>
 				<td>{$val->ggmailing_email}</td>
-				<td>{$val->ggmailing_mid}</td>
+				<td>{$val->ggmailing_mid}<block cond="in_array($val->ggmailing_mid,$_newsletter_mid)">(newsletter)</block></td>
 				<td>{$val->ggmailing_module_srl}</td>
 				<td>{$val->ggmailing_document_srl}</td>
+				<td>{$val->ggmailing_member_srl}</td>
 				<td>{zdate($val->regdate,'Y-m-d H:i:s')}</td>
 				<td width="40">
 				<form action="" method="post">

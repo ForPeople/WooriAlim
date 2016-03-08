@@ -2,7 +2,7 @@
 // normal
 $lang->donotsendlist = '수신거부 관리';
 $lang->configure = '설정';
-$lang->boardmailing = '게시판 메일링/댓글알림 관리';
+$lang->boardmailing = '게시판 메일링/댓글알림/뉴스레터 관리';
 $lang->manual = '사용자 가이드';
 $lang->insertmembers = '외부회원 등록 및 관리';
 $lang->regdate = '등록일';
@@ -80,9 +80,11 @@ $lang->manual_changestr = '치환변수';
 $lang->manual_changestr_content = '제목과 내용등록 시 {nickname},{email} 치환변수를 사용하면<br />
 받는회원 닉네임과 이메일주소가 자동으로 삽입됩니다.<br />
 치환변수를 하나의 단어로 간주하고 html을 적용할 수 있습니다.<br />';
-$lang->manual_boardmailing = '게시판 메일링/댓글알 관리';
+$lang->manual_boardmailing = '게시판 메일링/댓글알림/뉴스레터 관리';
 $lang->manual_boardmailing_content = '<a href=http://www.xpressengine.com/index.php?mid=download&package_id=22753306 target=_blank>게시판 메일링 위젯(GG Board Mailing Widget)</a> 을 이용하여 게시판 메일링을 구현할 수 있습니다.<br />
-게시판별 메일링/댓글알림 가입 회원을 관리합니다.';
+게시판 댓글알림 위젯(GG Ward Widget) 을 이용하여 게시판 댓글알림을 구현할 수 있습니다.<br />
+뉴스레터 위젯(GG Newsletter Widget) 을 이용하여 뉴스레터 메일링을 구현할 수 있습니다.<br />
+게시판별 메일링/댓글알림/뉴스레터 가입 회원을 관리합니다.';
 
 // list
 $lang->send_to_all = '전체보내기';
