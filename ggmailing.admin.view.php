@@ -37,6 +37,32 @@ class ggmailingAdminView extends ggmailing
 		$this->setTemplatePath($template_path);
 	}
 
+	function dispGgmailingAdminDonotsend()
+	{
+		$args = Context::getRequestVars();
+		if(!$args->page) $args->page = '1';
+		Context::set('args',$args);
+		
+		if($args->search_type=='ggmailing_email') {
+			$args->ggmailing_email = $args->search_keyword;
+		} elseif($args->search_type=='ggmailing_nickname') {
+			$args->ggmailing_nickname = $args->search_keyword;
+		} elseif($args->search_type=='ggmailing_member_srl') {
+			$args->ggmailing_member_srl = $args->search_keyword;
+		}
+
+		$output = executeQueryArray('ggmailing.getDonotsendList',$args);
+		if(!$output->toBool()) return $output;
+
+		Context::set('ds_info',$output->data);
+		Context::set('total_count', $output->total_count);
+		Context::set('total_page', $output->total_page);
+		Context::set('page', $output->page);
+		Context::set('page_navigation', $output->page_navigation);
+
+		$this->setTemplateFile('donotsend_list');
+	}
+
 	function dispGgmailingAdminBoardMailing() 
 	{
 		$args = Context::getRequestVars();

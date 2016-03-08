@@ -179,7 +179,7 @@ class ggmailingAdminController extends ggmailing
 		//$authcheck = json_decode($curl);
 
 		$args->is_sendok = 'W';
-		if($response) executeQuery('ggmailing.updateGgmailingAdminSmsSend',$args);
+		if($authcheck) executeQuery('ggmailing.updateGgmailingAdminSmsSend',$args);
 
 	} //end function
 
@@ -297,7 +297,7 @@ class ggmailingAdminController extends ggmailing
 		//$authcheck = json_decode($curl);
 		
 		$args->is_sendok = 'W';
-		if($response) executeQuery('ggmailing.updateGgmailingAdminSend',$args);
+		executeQuery('ggmailing.updateGgmailingAdminSend',$args);
 		
 	} //end function
 
@@ -907,6 +907,18 @@ $args->co = '<br /><br /><div style="border:1px solid #ccc;padding:5px;">{nickna
 		executeQuery('ggmailing.deleteGgmailingBoardMember',$args);
 
 		$returnUrl = getNotEncodedUrl('', 'module', 'admin', 'act', 'dispGgmailingAdminBoardMailing');
+		//$this->setRedirectUrl($returnUrl);
+		header("Location:" . $returnUrl);
+
+	}
+
+	function procGgmailingAdminDonotsendDelete()
+	{
+		$args = Context::getRequestVars();
+
+		executeQuery('ggmailing.deleteGgmailingDonotsend',$args);
+
+		$returnUrl = getNotEncodedUrl('', 'module', 'admin', 'act', 'dispGgmailingAdminDonotsend');
 		//$this->setRedirectUrl($returnUrl);
 		header("Location:" . $returnUrl);
 
