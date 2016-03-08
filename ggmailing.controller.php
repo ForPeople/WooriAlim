@@ -13,6 +13,145 @@ class ggmailingController extends ggmailing
 	{
 	}
 
+	function curl_request_async($url, $params, $type='POST', $output)  
+	{  
+	    foreach ($params as $key => &$val)  
+	    {  
+	        if (is_array($val))
+	        {  
+	        	$val = implode(',', $val);  
+	        }
+	        $post_params[] = $key.'='.urlencode($val);  
+	    }  
+	    $post_string = implode('&', $post_params);  
+	  
+	    $parts=parse_url($url);  
+	  
+	    if ($parts['scheme'] == 'http')  
+	    {  
+	        $fp = fsockopen($parts['host'], isset($parts['port'])?$parts['port']:80, $errno, $errstr, 30);  
+	    }  
+	    elseif ($parts['scheme'] == 'https')  
+	    {  
+	        $fp = fsockopen("ssl://" . $parts['host'], isset($parts['port'])?$parts['port']:443, $errno, $errstr, 30);  
+	    }  
+	  
+	    // Data goes in the path for a GET request  
+	    if('GET' == $type)
+	    {
+	    	$parts['path'] .= '?'.$post_string;  
+	    }
+	  
+	    $out = "$type ".$parts['path']." HTTP/1.1\r\n";  
+	    $out.= "Host: ".$parts['host']."\r\n";  
+	    $out.= "Content-Type: application/x-www-form-urlencoded\r\n";  
+	    $out.= "Content-Length: ".strlen($post_string)."\r\n";  
+	    $out.= "Connection: Close\r\n\r\n";  
+	    // Data goes in the request body for a POST request  
+	    if ('POST' == $type && isset($post_string))
+	    {
+	    	$out.= $post_string;  
+	    }
+	    fwrite($fp, $out);  
+	    if($output == 'json')
+	    {
+	    	// header 부분 걷어냄
+		    while (!feof($fp))
+		    {
+		        $buffer .= fread($fp,1024);
+		    }
+			if($buffer)
+			{
+				$pos = strpos($buffer, "\r\n\r\n");
+				$buffer = substr($buffer, $pos + 4);
+		    	return $buffer;
+		    }
+	    }
+	    fclose($fp);
+	} 
+
+	function triggerWard(&$obj)
+	{
+		$oModuleModel = getModel('module');
+		$config = $oModuleModel->getModuleConfig('ggmailing');
+		// 와드 사용여부 체크
+		if(!$config->type_ward || $config->type_ward == 'F') return false;
+
+		$num = 2000;
+		$obj->is_sendok = 'B';
+		$args = new stdClass();
+		$args->ggmailing_document_srl = $obj->document_srl;
+		$output = executeQueryArray('widgets.ggward.getWardCount',$args);
+		if(!$output->toBool()) return $output;
+
+		if($output->data) {
+			$dmn = getFullUrl('');
+			$dmn = parse_url($dmn);
+			$domain = substr($dmn['host'] . $dmn['path'], 0, -1);
+			$domain = str_replace('www.','',$domain);
+
+			$ggmailing_serv_url = $config->ggmailing_serv_url;
+			if($config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl) { $ggmailing_ssl = 'http://'; $ggmailing_ssl_port = ''; } 
+			elseif($config->ggmailing_ssl == 'Y') { $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }
+			$url = $ggmailing_ssl . $ggmailing_serv_url . $ggmailing_ssl_port . '/index.php';
+			$post_data = array(
+					'act' => 'dispWwapimanagerRequest',
+					'authkey' => $config->ggmailing_authkey,
+					'mid' => 'auth_woorimail',
+					'domain' => $domain,
+					'type' => 'ggmailing'
+			);
+			// 비동기
+			$curl = $this->curl_request_async($url, $post_data, $type='POST', $output='json');
+			$authcheck = json_decode($curl);
+
+			$obj->sender_nickname = $config->type_ward_nick ? $config->type_ward_nick : $domain;
+			$obj->sender_email = 'NOREPLY@woorimail.com';
+			
+			// 게시글 제목 구하기, 내용은 태그 포함 그대로 전송
+			$oDocumentModel = getModel('document');
+			$oDocument = $oDocumentModel->getDocument($obj->document_srl);
+			$obj->title = '[댓글알림] '.$oDocument->getTitle();
+			
+			$obj->foots = '<p><a href="'.getFullUrl('','mid',$obj->mid,'document_srl',$obj->document_srl,'comment_srl',$obj->comment_srl).'" target="_blank">[바로가기]</a></p><br /><br /><p>* 본 메일은 '.getFullUrl('').' 의 {nickname} 님의 요청에 의해서 전송되었습니다. 더이상 알림을 받고 싶지 않으시다면 해당 사이트에 가셔서 취소 버튼을 누르시면 됩니다.</p>';
+			$obj->content = $obj->content . $obj->foots;
+		}
+
+		foreach($output->data as $key => $val) {
+			//수신거부 제외
+			$obj->ggmailing_nickname = str_replace(',','.',$val->ggmailing_nickname);
+			$obj->ggmailing_email = str_replace(',','.',$val->ggmailing_email);
+			$obj->ggmailing_member_regdate = str_replace(',','.',$val->ggmailing_member_regdate);
+			$ggoutput = executeQueryArray('ggmailing.getDonotsend',$obj);
+
+			if(!$ggoutput->data) {
+				// 받는닉네임 세팅
+				$obj->receive_nickname .= str_replace(',','',$val->ggmailing_nickname) . ',';
+				// 받는이메일 세팅
+				$obj->receive_email .= str_replace(',','',$val->ggmailing_email) . ',';
+				// 회원등록일 세팅
+				$obj->receive_member_regdate .= str_replace(',','',$val->ggmailing_member_regdate) . ',';
+
+				if((($key+1) % $num == 0) && $num) {
+					executeQuery('ggmailing.insertGgmailingAdminSend',$obj);
+					$obj->receive_nickname = '';
+					$obj->receive_email = '';
+					$obj->receive_member_regdate = '';
+				}//endif
+			} //endif
+		}//endforeach
+		
+		if($authcheck->ggauth_check == 'OK' && $output->data) {
+			$is_Amount = $authcheck->event_point + $authcheck->free_point + $authcheck->etc_point + $authcheck->pay_point;
+			if(count($output->data) <= $is_Amount) {
+				if($num && ($obj->receive_nickname != '' || $obj->receive_email != '')) {
+					executeQuery('ggmailing.insertGgmailingAdminSend',$obj);
+				}
+				$this->procGgmailingSendOK('B');
+			}
+		}
+	}
+
 	function triggerInsertGgmailing(&$obj) 
 	{
 		$oModuleModel = getModel('module');
@@ -23,6 +162,7 @@ class ggmailingController extends ggmailing
 
 		$num = 2000;
 		$obj->is_sendok = 'B';
+		$args = new stdClass();
 		$args->ggmailing_module_srl = $obj->module_srl;
 		
 		$output = executeQueryArray('ggmailing.getBoardMemberCount',$args);
@@ -35,7 +175,8 @@ class ggmailingController extends ggmailing
 			$domain = str_replace('www.','',$domain);
 
 			$ggmailing_serv_url = $config->ggmailing_serv_url;
-			if($config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl) { $ggmailing_ssl = 'http://'; $ggmailing_ssl_port = ''; } elseif($config->ggmailing_ssl == 'Y') { $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }
+			if($config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl) { $ggmailing_ssl = 'http://'; $ggmailing_ssl_port = ''; } 
+			elseif($config->ggmailing_ssl == 'Y') { $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }
 			$url = $ggmailing_ssl . $ggmailing_serv_url . $ggmailing_ssl_port . '/index.php';
 			$post_data = array(
 					'act' => 'dispWwapimanagerRequest',
@@ -44,18 +185,9 @@ class ggmailingController extends ggmailing
 					'domain' => $domain,
 					'type' => 'ggmailing'
 			);
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL,$url);
-			curl_setopt($ch, CURLOPT_POST,1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS,$post_data);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			if($config->ggmailing_ssl == 'Y') {
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-			}
-			$response = curl_exec($ch);
-			$authcheck = json_decode($response);
-			curl_close($ch);
+			// 비동기
+			$curl = $this->curl_request_async($url, $post_data, $type='POST', $output='json');
+			$authcheck = json_decode($curl);
 			
 			$obj->sender_nickname = $config->type_board_mailing_nick ? $config->type_board_mailing_nick : $domain;
 			$obj->sender_email = 'NOREPLY@woorimail.com';
@@ -139,18 +271,9 @@ class ggmailingController extends ggmailing
 				'domain' => $domain,
 				'type' => 'ggmailing'
 		);
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,$url);
-		curl_setopt($ch, CURLOPT_POST,1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS,$post_data);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		if($config->ggmailing_ssl == 'Y') {
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		}
-		$response = curl_exec($ch);
-		$authcheck = json_decode($response);
-		curl_close($ch);
+		// 비동기
+		$curl = $this->curl_request_async($url, $post_data, $type='POST', $output='json');
+		$authcheck = json_decode($curl);
 		
 		$obj->sender_nickname = $config->type_xe_notilite_nick ? $config->type_xe_notilite_nick : $domain;
 		$obj->sender_email = 'NOREPLY@woorimail.com';
@@ -287,18 +410,9 @@ class ggmailingController extends ggmailing
 				'domain' => $domain,
 				'type' => 'ggmailing'
 		);
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,$url);
-		curl_setopt($ch, CURLOPT_POST,1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS,$post_data);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		if($config->ggmailing_ssl == 'Y') {
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		}
-		$response = curl_exec($ch);
-		$authcheck = json_decode($response);
-		curl_close($ch);
+		// 비동기
+		$curl = $this->curl_request_async($url, $post_data, $type='POST', $output='json');
+		$authcheck = json_decode($curl);
 		
 		$obj->sender_nickname = $config->type_xe_send_nick ? $config->type_xe_send_nick : $domain;
 		$obj->sender_email = 'NOREPLY@woorimail.com';
