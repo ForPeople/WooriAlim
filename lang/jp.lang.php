@@ -1,5 +1,6 @@
 <?php
 // normal
+$lang->donotsendlist = '수신거부 관리';
 $lang->configure = '設定';
 $lang->boardmailing = '게시판 메일링/댓글알림 관리';
 $lang->manual = '사용자 가이드';

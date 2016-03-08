@@ -1,0 +1,19 @@
+<query id="getDonotsendList" action="select">
+    <tables>
+        <table name="ggmailing_donotsends" />
+    </tables>
+    <columns>
+        <column name="*" />
+    </columns>   
+    <conditions>
+		<condition operation="like" column="ggmailing_nickname" var="ggmailing_nickname" />
+        <condition operation="equal" column="ggmailing_member_srl" var="ggmailing_member_srl" pipe="and" />
+		<condition operation="like" column="ggmailing_email" var="ggmailing_email" pipe="and" />
+    </conditions>
+    <navigation>
+        <index var="sort_index" default="ggmailing_donotsend_srl" order="desc" />
+        <list_count var="list_count" default="20" />
+        <page_count var="page_count" default="10" />
+        <page var="page" default="1" />
+    </navigation>
+</query>

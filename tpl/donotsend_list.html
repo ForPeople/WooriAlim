@@ -1,0 +1,65 @@
+<!--#include("./header.html")-->
+<h3 class="sub_title">{$lang->donotsend_list}</h3>
+<form action="./" method="POST" style="float:left;">
+<span>Total:{$total_count}, Page:{$page}/{$total_page}</span>
+<input type="hidden" name="act" value="dispGgmailingAdminDonotsend" />
+<input type="hidden" name="module" value="admin" />
+<select name="search_type" style="margin-top:10px; width:100px;">
+	<option value="ggmailing_email" selected="selected"|cond="!$args->search_type || $args->search_type=='ggmailing_email'" />{$lang->receive_email}
+	<option value="ggmailing_nickname" selected="selected"|cond="$args->search_type=='ggmailing_nickname'" />{$lang->nick_name}
+	<option value="ggmailing_member_srl" selected="selected"|cond="$args->search_type=='ggmailing_member_srl'" />Member Srl
+</select>
+<input type="text" name="search_keyword" value="{$args->search_keyword}" style="margin-top:10px;" />
+<input class="xet_btn medium blue" type="submit" value="{$lang->cmd_search}" />
+</form>
+<table class="index_table">
+
+	<thead>
+		<tr>
+			<th rowspan="2">no.</th>
+			<th>{$lang->receive_nickname}</th>
+			<th>Member Srl</th>
+			<th>{$lang->receive_email}</th>
+			<th>{$lang->regdate}</th>
+			<th>{$lang->delete}</th>
+		 </tr>
+	</thead>
+	<tbody>
+		<!--@foreach($ds_info as $key => $val)-->
+			<tr style="border-top:1px solid #ddd;">
+				<td>{$key}</td>
+				<td>{$val->ggmailing_nickname}</td>
+				<td>{$val->ggmailing_member_srl}</td>
+				<td>{$val->ggmailing_email}</td>
+				<td>{zdate($val->regdate,'Y-m-d H:i:s')}</td>
+				<td width="40">
+				<form action="" method="post">
+				<input type="hidden" name="module" value="admin" />
+				<input type="hidden" name="act" value="procGgmailingAdminDonotsendDelete" />
+				<input type="hidden" name="ggmailing_donotsend_srl" value="{$val->ggmailing_donotsend_srl}" />
+				<input type="submit" class="xet_btn medium red" value="{$lang->delete}" onclick="javascript:if(confirm('{$lang->wantdel}')) return; else return false;" />
+				</form>
+				</td>
+			</tr>
+		<!--@end-->
+	</tbody>
+</table>
+
+
+<form action="./" class="ggm_pagination">
+	<input type="hidden" name="error_return_url" value="" />
+	<input type="hidden" name="module" value="{$module}" />
+	<input type="hidden" name="act" value="{$act}" />
+	<ul>
+		<li class="disabled"|cond="!$page || $page == 1"><a href="{getUrl('page', '')}">&laquo; {$lang->first_page}</a></li>
+
+		<!--@while($page_no = $page_navigation->getNextPage())-->
+		{@$last_page = $page_no}
+		<li class="active"|cond="$page_no == $page"><a  href="{getUrl('page', $page_no)}">{$page_no}</a></li>
+		<!--@end-->
+
+		<li class="disabled"|cond="$page == $page_navigation->last_page"><a href="{getUrl('page', $page_navigation->last_page)}" title="{$page_navigation->last_page}">{$lang->last_page} &raquo;</a></li>
+	</ul>
+</form>
+
+<!--#include("./footer.html")-->

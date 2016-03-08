@@ -86,6 +86,8 @@ $module_list = $oModuleModel->getModuleList();
 				jQuery("#ggmember").show();
 				jQuery("#ggmember2").show();
 				jQuery("#boardmailing").show();
+				jQuery("#boardmailing2").show();
+				jQuery("#donotsend").show();
 			},
 			global: false,
 			cache: false,
@@ -191,18 +193,11 @@ $module_list = $oModuleModel->getModuleList();
         <li class="ggtopMenuLi" style="display:none;" id="boardmailing">
             <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminBoardMailing')}">{$lang->boardmailing}</a>
         </li>
-		<!--
-        <li>|</li>
+        <li style="display:none;" id="boardmailing2">|</li>
 
-        <li class="ggtopMenuLi">
-            <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispNcenterliteAdminList')}">알림목록</a>
+		<li class="ggtopMenuLi" style="display:none;" id="donotsend">
+            <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminDonotsend')}">{$lang->donotsendlist}</a>
         </li>
-		<li>|</li>
-
-        <li class="ggtopMenuLi">
-            <a class="ggmenuLink" href="http://woorimail.com/send_result" target="_blank">메일발송내역</a>
-        </li>
-		-->
 		<!--@end-->
     </ul>
 </nav>

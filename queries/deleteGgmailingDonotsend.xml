@@ -1,0 +1,10 @@
+<query id="deleteGgmailingDonotsend" action="delete">
+    <tables>
+        <table name="ggmailing_donotsends" />
+    </tables>
+    <columns>
+    </columns>   
+    <conditions>
+        <condition operation="equal" column="ggmailing_donotsend_srl" var="ggmailing_donotsend_srl" />
+    </conditions>
+</query>

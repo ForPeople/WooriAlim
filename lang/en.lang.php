@@ -1,5 +1,6 @@
 <?php
 // normal
+$lang->donotsendlist = '수신거부 관리';
 $lang->configure = '설정';
 $lang->boardmailing = '게시판 메일링/댓글알림 관리';
 $lang->manual = '사용자 가이드';
@@ -17,9 +18,6 @@ $lang->sender_email = '발송자 이메일';
 $lang->receive_email = '수신이메일';
 $lang->receive_nickname = '수신닉네임';
 $lang->wantdel = '삭제하시겠습니까?';
-
-// baordmailing
-
 
 // config
 $lang->warning = '우리알림 모듈은 포피플이 개발하고 배포하는 대량메일 솔루션 입니다.<br />
