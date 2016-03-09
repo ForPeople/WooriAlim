@@ -47,46 +47,17 @@
 			{$email_address[0]} 
 			<!--@if($config->sender_num > 1 && $email_address[1])-->{$lang->outof} {$cnt}{$lang->email}<!--@end-->
 			</td>
-			{@
-				$dmn = getFullUrl('');
-				$dmn = parse_url($dmn);
-				$domain = substr($dmn['host'] . $dmn['path'], 0, -1);
-				$domain = str_replace('www.','',$domain);
-			}
-
-			{@ $ggmailing_serv_url = $config->ggmailing_serv_url; }
-			<!--@if($config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl)--> {@ $ggmailing_ssl = 'http://'; $ggmailing_ssl_port = ''; } <!--@elseif($config->ggmailing_ssl == 'Y')--> {@ $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }<!--@end-->
-			{@
-				$url = $ggmailing_ssl . $ggmailing_serv_url . $ggmailing_ssl_port . '/index.php';
-				$post_data = array(
-						'act' => 'dispWwapimanagerRequest',
-						'authkey' => $config->ggmailing_authkey,
-						'mid' => 'auth_woorimail',
-						'domain' => $domain,
-						'type' => 'ggmailing',
-						'ggmailing_document_srl' => $val->ggmailing_document_srl,
-						'ggmailing_send_srl' => $val->ggmailing_send_srl
-				);
-			}
 			<script>
 				jQuery(document).ready(function() {
-					var url = '{$url}';
+					var url = './index.php';
 
 					var formData = new FormData();
 
-					var act = '{$post_data[act]}';
+					var act = 'dispGgmailingRequest';
 					formData.append("act",act);
-					var authkey = '{$post_data[authkey]}';
-					formData.append("authkey",authkey);
-					var mid = '{$post_data[mid]}';
-					formData.append("mid",mid);
-					var domain = '{$post_data[domain]}';
-					formData.append("domain",domain);
-					var type = '{$post_data[type]}';
-					formData.append("type",type);
-					var ggmailing_document_srl = '{$post_data[ggmailing_document_srl]}';
+					var ggmailing_document_srl = '{$val->ggmailing_document_srl}';
 					formData.append("ggmailing_document_srl",ggmailing_document_srl);
-					var ggmailing_send_srl = '{$post_data[ggmailing_send_srl]}';
+					var ggmailing_send_srl = '{$val->ggmailing_send_srl}';
 					formData.append("ggmailing_send_srl",ggmailing_send_srl);
 
 					jQuery.ajax({
