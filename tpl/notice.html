@@ -22,7 +22,7 @@
 				var result = JSON.parse(data);
 				for (var i = 0; i < 10; i++)
 				{
-					document.getElementById('notice_'+i).innerHTML = '<a href="'+url+'?document_srl='+result.notice_no[i]+'" target="_blank">'+result.notice_title[i]+'</a>';
+					document.getElementById('notice_'+i).innerHTML = '<a href="http://woorimail.com/index.php?document_srl='+result.notice_no[i]+'" target="_blank">'+result.notice_title[i]+'</a>';
 					var string = result.notice_regdate[i];
 					var year = string.substring(0,4);
 					var month = string.substring(4,6);
