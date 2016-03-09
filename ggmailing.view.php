@@ -87,7 +87,7 @@ class ggmailingView extends ggmailing {
 		{ $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }
 
 		$url = $ggmailing_ssl . $ggmailing_serv_url . $ggmailing_ssl_port . '/index.php';
-		
+		// 헤더, 공지, 전송완료값 모두 처리
 		$post_data = array(
 				'act' => 'dispWwapimanagerRequest',
 				'authkey' => $config->ggmailing_authkey,
@@ -98,23 +98,69 @@ class ggmailingView extends ggmailing {
 				'ggmailing_document_srl' => $args->ggmailing_document_srl,
 				'ggmailing_send_srl' => $args->ggmailing_send_srl
 		);
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,$url);
-		curl_setopt($ch, CURLOPT_POST,1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS,$post_data);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		if($config->ggmailing_ssl == 'Y')
-		{
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		}
-		$response = curl_exec($ch);
-		//$authcheck = json_decode($response);
-		curl_close($ch);
+		// 비동기
+		$response = $this->curl_request_async($url, $post_data, $type='POST', $output='json');
 
 		Context::set('args',$args);
 		Context::set('response',$response);
 		$this->setTemplateFile('request');
 	}
+
+	function curl_request_async($url, $params, $type='POST', $output)  
+	{  
+	    foreach ($params as $key => &$val)  
+	    {  
+	        if (is_array($val))
+	        {  
+	        	$val = implode(',', $val);  
+	        }
+	        $post_params[] = $key.'='.urlencode($val);  
+	    }  
+	    $post_string = implode('&', $post_params);  
+	  
+	    $parts=parse_url($url);  
+	  
+	    if ($parts['scheme'] == 'http')  
+	    {  
+	        $fp = fsockopen($parts['host'], isset($parts['port'])?$parts['port']:80, $errno, $errstr, 30);  
+	    }  
+	    elseif ($parts['scheme'] == 'https')  
+	    {  
+	        $fp = fsockopen("ssl://" . $parts['host'], isset($parts['port'])?$parts['port']:443, $errno, $errstr, 30);  
+	    }  
+	  
+	    // Data goes in the path for a GET request  
+	    if('GET' == $type)
+	    {
+	    	$parts['path'] .= '?'.$post_string;  
+	    }
+	  
+	    $out = "$type ".$parts['path']." HTTP/1.1\r\n";  
+	    $out.= "Host: ".$parts['host']."\r\n";  
+	    $out.= "Content-Type: application/x-www-form-urlencoded\r\n";  
+	    $out.= "Content-Length: ".strlen($post_string)."\r\n";  
+	    $out.= "Connection: Close\r\n\r\n";  
+	    // Data goes in the request body for a POST request  
+	    if ('POST' == $type && isset($post_string))
+	    {
+	    	$out.= $post_string;  
+	    }
+	    fwrite($fp, $out);  
+	    if($output == 'json')
+	    {
+	    	// header 부분 걷어냄
+		    while (!feof($fp))
+		    {
+		        $buffer .= fread($fp,1024);
+		    }
+			if($buffer)
+			{
+				$pos = strpos($buffer, "\r\n\r\n");
+				$buffer = substr($buffer, $pos + 4);
+		    	return $buffer;
+		    }
+	    }
+	    fclose($fp);
+	} 
 }
 ?>
