@@ -10,7 +10,6 @@
 		<!--@if($config->accept_agree == 'Y')--><input type="hidden" name="accept_agree" value="Y" /><!--@end-->
 </div>
 	<section class="section" id="form1"|cond="!$config->accept_agree">
-		<h2>{$lang->configure}</h2>
 		<p>{$lang->must_insert}</p>
 
 		<input type="hidden" name="module" value="ggmailing" />

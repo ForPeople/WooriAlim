@@ -76,6 +76,7 @@
 	  <action name="procGgmailingAdminBoardmailingDelete" type="controller" standalone="true" />
 
 	  <action name="dispGgmailingDonotsend" type="view" />
+      <action name="dispGgmailingRequest" type="view" />
 
 	  <action name="procGgmailingBoardSendOk" type="controller" />
 	  <action name="procGgmailingXeSend" type="controller" />

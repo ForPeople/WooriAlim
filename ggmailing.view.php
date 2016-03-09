@@ -16,7 +16,7 @@ class ggmailingView extends ggmailing {
 			Context::set('module_srl', $module_srl);
 		}
 		$oModuleModel = &getModel('module');
-		$config = $oModuleModel->getModuleConfig('ggshop');
+		$config = $oModuleModel->getModuleConfig('ggmailing');
 		$this->config = $config;
 		Context::set('config', $config);
 
@@ -65,6 +65,56 @@ class ggmailingView extends ggmailing {
 		Context::set('args',$args);
 		Context::set('donotsend',$donotsend);
 		$this->setTemplateFile('donotsend');
+	}
+
+	function dispGgmailingRequest() {
+		$args = Context::getRequestVars();
+		$oModuleModel = &getModel('module');
+		$config = $oModuleModel->getModuleConfig('ggmailing');
+		$this->config = $config;
+		Context::set('config', $config);
+
+		$dmn = getFullUrl('');
+		$dmn = parse_url($dmn);
+		$domain = substr($dmn['host'] . $dmn['path'], 0, -1);
+		$domain = str_replace('www.','',$domain);
+		
+		$ggmailing_serv_url = $config->ggmailing_serv_url;
+
+		if($config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl)
+		{ $ggmailing_ssl = 'http://'; $ggmailing_ssl_port = ''; } 
+		elseif($config->ggmailing_ssl == 'Y')
+		{ $ggmailing_ssl = 'https://'; $ggmailing_ssl_port = ':' . $config->ggmailing_ssl_port; }
+
+		$url = $ggmailing_ssl . $ggmailing_serv_url . $ggmailing_ssl_port . '/index.php';
+		
+		$post_data = array(
+				'act' => 'dispWwapimanagerRequest',
+				'authkey' => $config->ggmailing_authkey,
+				'mid' => 'auth_woorimail',
+				'domain' => $domain,
+				'type' => 'ggmailing',
+				'notice_mid' => $args->notice_mid,
+				'ggmailing_document_srl' => $args->ggmailing_document_srl,
+				'ggmailing_send_srl' => $args->ggmailing_send_srl
+		);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL,$url);
+		curl_setopt($ch, CURLOPT_POST,1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS,$post_data);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		if($config->ggmailing_ssl == 'Y')
+		{
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+		}
+		$response = curl_exec($ch);
+		//$authcheck = json_decode($response);
+		curl_close($ch);
+
+		Context::set('args',$args);
+		Context::set('response',$response);
+		$this->setTemplateFile('request');
 	}
 }
 ?>
