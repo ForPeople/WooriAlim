@@ -363,7 +363,7 @@ class ggmailingController extends ggmailing
 		$authcheck = json_decode($curl);
 		
 		$obj->sender_nickname = $config->type_xe_send_nick ? $config->type_xe_send_nick : $domain;
-		$obj->sender_email = 'NOREPLY@woorimail.com';
+		$obj->sender_email = $obj->sender_email ? $obj->sender_email : 'NOREPLY@woorimail.com';
 
 		$obj->document_srl = getNextSequence();
 		//$obj->title = '';
