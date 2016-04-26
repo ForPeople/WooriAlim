@@ -73,6 +73,7 @@ class ggmailingView extends ggmailing {
 		$config = $oModuleModel->getModuleConfig('ggmailing');
 		$this->config = $config;
 		Context::set('config', $config);
+		if(!$config->ggmailing_serv_url || !$config->ggmailing_ssl_port) return;
 
 		$dmn = getFullUrl('');
 		$dmn = parse_url($dmn);
