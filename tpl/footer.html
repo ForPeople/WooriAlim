@@ -10,3 +10,70 @@
 <!--@if($args->mode == 'no_member')-->
 <script>alert('{$lang->no_member}');document.location.href="./index.php?module=admin&act=dispmailingAdminList";</script>
 <!--@end-->
+
+<script>
+	jQuery(document).ready(function() {
+		var url = './index.php';
+
+		var formData = new FormData();
+
+		var act = 'dispGgmailingRequest';
+		formData.append("act",act);
+
+		jQuery.ajax({
+			url: url,
+			type: 'POST',
+			data: formData,
+			async: false,
+			success: function (data) {
+				//alert(data);
+				var result = JSON.parse(data);
+				if(result.ggauth_check == 'OK') {
+					document.getElementById("ggauth_check").innerHTML = "OK";
+				} else {
+					document.getElementById("ggauth_check").innerHTML = "서버점검중";
+				}
+				if(result.free_point != null) {
+					document.getElementById("free_point").innerHTML = Number(result.free_point).toLocaleString('en');
+				} else {
+					document.getElementById("free_point").innerHTML = "0";
+				}
+				if(result.pay_point != null) {
+					document.getElementById("pay_point").innerHTML = Number(result.pay_point).toLocaleString('en');
+				} else {
+					document.getElementById("pay_point").innerHTML = "0";
+				}
+				if(result.event_point != null) {
+					document.getElementById("event_point").innerHTML = Number(result.event_point).toLocaleString('en');
+				} else {
+					document.getElementById("event_point").innerHTML = "0";
+				}
+				if(result.etc_point != null) {
+					document.getElementById("etc_point").innerHTML = Number(result.etc_point).toLocaleString('en');
+				} else {
+					document.getElementById("etc_point").innerHTML = "0";
+				}
+				if(result.freemail_wait>0) document.getElementById('freemail_wait').innerHTML = Number(result.freemail_wait).toLocaleString('en');
+				else document.getElementById('freemail_wait').innerHTML = '0';
+				if(result.paymail_wait>0) document.getElementById('paymail_wait').innerHTML = Number(result.paymail_wait).toLocaleString('en');
+				else document.getElementById('paymail_wait').innerHTML = '0';
+
+				jQuery("#ggnotice").show();
+				jQuery("#ggnotice2").show();
+				jQuery("#ggmail").show();
+				jQuery("#ggmail2").show();
+				jQuery("#ggmember").show();
+				jQuery("#ggmember2").show();
+				jQuery("#boardmailing").show();
+				jQuery("#boardmailing2").show();
+				jQuery("#donotsend").show();
+			},
+			global: false,
+			cache: false,
+			contentType: false,
+			processData: false
+		});
+		return false;
+
+	})
+</script>
