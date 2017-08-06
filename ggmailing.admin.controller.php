@@ -36,7 +36,9 @@ class ggmailingAdminController extends ggmailing
 	    {  
 	        $fp = fsockopen("ssl://" . $parts['host'], isset($parts['port'])?$parts['port']:443, $errno, $errstr, 30);  
 	    }  
-	  
+		
+		if(!$fp) return;
+		
 	    // Data goes in the path for a GET request  
 	    if('GET' == $type)
 	    {
@@ -516,7 +518,7 @@ $args->co = '<br /><br /><div style="border:1px solid #ccc;padding:5px;">{nickna
 			$mg = explode('_',$args->ggmailing_group);
 		}
 		if($mg[0]=='m') {
-			$args->list_count = 9999999;
+			$args->list_count = 99999999;
 			$output = executeQueryArray('ggmailing.getGgmailingAdminMemberList',$args);
 			if(!$output->toBool()) return $output;
 			if(!$output->data) {

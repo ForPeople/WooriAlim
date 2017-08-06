@@ -35,7 +35,9 @@ class ggmailingController extends ggmailing
 	    {  
 	        $fp = fsockopen("ssl://" . $parts['host'], isset($parts['port'])?$parts['port']:443, $errno, $errstr, 30);  
 	    }  
-	  
+		
+		if(!$fp) return;
+		
 	    // Data goes in the path for a GET request  
 	    if('GET' == $type)
 	    {
