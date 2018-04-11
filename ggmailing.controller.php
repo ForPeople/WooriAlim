@@ -35,7 +35,9 @@ class ggmailingController extends ggmailing
 	    {  
 	        $fp = fsockopen("ssl://" . $parts['host'], isset($parts['port'])?$parts['port']:443, $errno, $errstr, 30);  
 	    }  
-	  
+		
+		if(!$fp) return;
+		
 	    // Data goes in the path for a GET request  
 	    if('GET' == $type)
 	    {
@@ -363,7 +365,7 @@ class ggmailingController extends ggmailing
 		$authcheck = json_decode($curl);
 		
 		$obj->sender_nickname = $config->type_xe_send_nick ? $config->type_xe_send_nick : $domain;
-		$obj->sender_email = 'NOREPLY@woorimail.com';
+		$obj->sender_email = $obj->sender_email ? $obj->sender_email : 'NOREPLY@woorimail.com';
 
 		$obj->document_srl = getNextSequence();
 		//$obj->title = '';

@@ -73,6 +73,7 @@ class ggmailingView extends ggmailing {
 		$config = $oModuleModel->getModuleConfig('ggmailing');
 		$this->config = $config;
 		Context::set('config', $config);
+		if(!$config->ggmailing_serv_url || !$config->ggmailing_ssl_port) return;
 
 		$dmn = getFullUrl('');
 		$dmn = parse_url($dmn);
@@ -128,7 +129,9 @@ class ggmailingView extends ggmailing {
 	    {  
 	        $fp = fsockopen("ssl://" . $parts['host'], isset($parts['port'])?$parts['port']:443, $errno, $errstr, 30);  
 	    }  
-	  
+	  	
+	  	if(!$fp) return;
+	  	
 	    // Data goes in the path for a GET request  
 	    if('GET' == $type)
 	    {

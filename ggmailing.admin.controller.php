@@ -36,7 +36,9 @@ class ggmailingAdminController extends ggmailing
 	    {  
 	        $fp = fsockopen("ssl://" . $parts['host'], isset($parts['port'])?$parts['port']:443, $errno, $errstr, 30);  
 	    }  
-	  
+		
+		if(!$fp) return;
+		
 	    // Data goes in the path for a GET request  
 	    if('GET' == $type)
 	    {
@@ -278,8 +280,8 @@ class ggmailingAdminController extends ggmailing
 				"act" => $i_act,
 				"ggmailing_send_srl" => $wwoutput->ggmailing_send_srl,
 				"ggmailing_document_srl" => $wwoutput->ggmailing_document_srl,
-				"ggmailing_title" => $wwoutput->ggmailing_title,
-				"ggmailing_content" => $wwoutput->ggmailing_content,
+				"ggmailing_title" => htmlspecialchars_decode($wwoutput->ggmailing_title),
+				"ggmailing_content" => htmlspecialchars_decode($wwoutput->ggmailing_content),
 				"ggmailing_sender_nickname" => $wwoutput->ggmailing_sender_nickname,
 				"ggmailing_sender_email" => $wwoutput->ggmailing_sender_email,
 				"ggmailing_sender_flag" => $wwoutput->type_replymail,
@@ -340,7 +342,7 @@ $args->cx = '<br /><br /><div style="border:1px solid #ccc;padding:5px;">귀하�
 $args->co = '<br /><br /><div style="border:1px solid #ccc;padding:5px;">{nickname}님은 {member_regdate} '.getFullUrl('').' 에서 광고 수신에 동의하셨습니다.
 광고 수신을 원하지 않으시면, <a href="'.getFullUrl('').'?act=dispGgmailingDonotsend&email={email}&regdate={member_regdate}&nick_name={nickname}">[수신거부]</a>를 눌러주십시오. 수신거부처리가 이루어집니다.
 (If you don’t want to receive this e-mail anymore, click <a href="'.getFullUrl('').'?act=dispGgmailingDonotsend&email={email}&regdate={member_regdate}&nick_name={nickname}">[here]</a>)</div>';
-		$obj->title = $args->title;
+		$obj->title = htmlspecialchars($args->title);
 		if($args->type_donotsend == 'cx') $args->type_donotsend = $args->cx;
 		if($args->type_donotsend == 'co') $args->type_donotsend = $args->co;
 		if($args->type_donotsend == 'none') $args->type_donotsend = '';
@@ -374,7 +376,7 @@ $args->co = '<br /><br /><div style="border:1px solid #ccc;padding:5px;">{nickna
 
 		$obj->document_srl = $args->primary_key;
 
-		$obj->title = $args->title;
+		$obj->title = htmlspecialchars($args->title);
 		$obj->content = $args->content;
 		$obj->sender_nickname = $args->sender_nickname?$args->sender_nickname:'설정없음';
 		if($args->type_replymail == 'Y') $obj->sender_email = 'SERVICE@woorimail.com';
@@ -503,7 +505,7 @@ $args->co = '<br /><br /><div style="border:1px solid #ccc;padding:5px;">{nickna
 		}
 
 		$obj->document_srl = $args->ggmailing_document_srl;
-		$obj->title = $args->title;
+		$obj->title = htmlspecialchars($args->title);
 		$obj->content = $args->content;
 		$obj->sender_nickname = $args->sender_nickname;
 		$obj->sender_email = $args->sender_email;
@@ -516,7 +518,7 @@ $args->co = '<br /><br /><div style="border:1px solid #ccc;padding:5px;">{nickna
 			$mg = explode('_',$args->ggmailing_group);
 		}
 		if($mg[0]=='m') {
-			$args->list_count = 9999999;
+			$args->list_count = 99999999;
 			$output = executeQueryArray('ggmailing.getGgmailingAdminMemberList',$args);
 			if(!$output->toBool()) return $output;
 			if(!$output->data) {
