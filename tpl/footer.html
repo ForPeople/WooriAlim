@@ -11,8 +11,11 @@
 <script>alert('{$lang->no_member}');document.location.href="./index.php?module=admin&act=dispmailingAdminList";</script>
 <!--@end-->
 
+<!--@if($config->ggmailing_authkey)-->
 <script>
-	jQuery(document).ready(function() {
+	//jQuery(document).ready(function() {
+	function getStatus() {
+		jQuery(".woorimail").show();
 		var url = './index.php';
 
 		var formData = new FormData();
@@ -74,6 +77,7 @@
 			processData: false
 		});
 		return false;
-
-	})
+	}
+	//});
 </script>
+<!--@end-->

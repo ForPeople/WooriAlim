@@ -1,6 +1,6 @@
 <?php
 // normal
-$lang->donotsendlist = '수신거부 관리';
+$lang->donotsend_list = '수신거부 관리';
 $lang->configure = '設定';
 $lang->boardmailing = '게시판 메일링/댓글알림/뉴스레터 관리';
 $lang->manual = '사용자 가이드';
@@ -19,7 +19,7 @@ $lang->receive_email = '受信メール';
 $lang->receive_nickname = '受信ニックネーム';
 $lang->wantdel = '삭제하시겠습니까?';
 
-// baordmailing
+// boardmailing
 
 
 // config
@@ -31,7 +31,7 @@ $lang->accept_agree = '우리알림 주의사항을 숙지하였고 모든 내�
 $lang->must_insert = '(*)表示は、必ず入力して保存します。';
 $lang->insertauthkey = '인증키입력';
 $lang->authcenter = '발급처';
-$lang->insert_url = '입력할 도메인';
+$lang->insert_url = '발급시 입력할 도메인';
 $lang->type_replymail = '대량메일 전송타입 설정';
 $lang->type_replymail_f = '회신없는 대량메일';
 
