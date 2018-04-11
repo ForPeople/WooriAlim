@@ -22,36 +22,33 @@
 						function serv_checked() {
 							var x = document.getElementById("myServ1");
 							var y = document.getElementById("myServ2");
-							var z = document.getElementById("myPort80");
+							var z80 = document.getElementById("myPort80");
+							var z443= document.getElementById("myPort443");
 							if(x.checked) document.getElementById("myServUrl").value = x.value;
 							else if(y.checked) document.getElementById("myServUrl").value = y.value;
 
-							if(z.checked) document.getElementById("myPort").value = '80';
+							if(z80.checked) document.getElementById("myPort").value = '80';
+							else if(z443.checked) document.getElementById("myPort").value = '443';
 						}
 
 					</script>
-					<th width="200px" rowspan="2"><em><font color="red">*</font></em>대량 메일서비스 서버 선택</th>
+					<th width="200px" rowspan="1"><em><font color="red">*</font></em>대량 메일서비스 서버 선택</th>
 					<td>
 						<input id="myServ1" onchange="serv_checked()" type="radio" name="ggmailing_serv_url" value="woorimail.com" checked="checked"|cond="!$config->ggmailing_serv_url || $config->ggmailing_serv_url == 'woorimail.com'" /> 
 						<label>우리메일 공식 무료 서버(기본:woorimail.com)</label>
 						<br />
 						<input id="myServ2" onchange="serv_checked()" type="radio" name="ggmailing_serv_url" value="URL을 입력하세요." checked="checked"|cond="$config->ggmailing_serv_url && $config->ggmailing_serv_url != 'woorimail.com'" /> 
-						<label>커스텀 대량메일 시스템 구축 서버(옵션)</label><br />
-						URL : <input id="myServUrl" type="text" name="ggmailing_serv_url" value="{$config->ggmailing_serv_url}"|cond="$config->ggmailing_serv_url && $config->ggmailing_serv_url != 'woorimail.com'" value="woorimail.com"|cond="$config->ggmailing_serv_url == 'woorimail.com' || !$config->ggmailing_serv_url" />
-						<p class="ggm_example">URL을 공란으로 비워두시면 모듈이 작동하지 않습니다.</p>
-						<input type="radio" name="ggmailing_ssl" value="Y" checked="checked"|cond="$config->ggmailing_ssl == 'Y'" />
+						<label>Custom WMS(옵션)</label><br />
+						메일 발송 서버 : <input id="myServUrl" type="text" name="ggmailing_serv_url" value="{$config->ggmailing_serv_url}"|cond="$config->ggmailing_serv_url && $config->ggmailing_serv_url != 'woorimail.com'" value="woorimail.com"|cond="$config->ggmailing_serv_url == 'woorimail.com' || !$config->ggmailing_serv_url" />
+						{@ /* }<br />
+						<input type="radio" id="myPort443" onchange="serv_checked()" name="ggmailing_ssl" value="Y" checked="checked"|cond="$config->ggmailing_ssl == 'Y'" />
 						<label>SSL 보안전송 사용</label>
 						&nbsp;&nbsp;&nbsp;
 						<input type="radio" id="myPort80" onchange="serv_checked()" name="ggmailing_ssl" value="N" checked="checked"|cond="$config->ggmailing_ssl == 'N' || !$config->ggmailing_ssl" />
-						<label>SSL 보안전송 미사용</label>
-						&nbsp;&nbsp;&nbsp;
-						(포트 : <input type="text" id="myPort" name="ggmailing_ssl_port" value="80"|cond="$config->ggmailing_ssl == 'N'" value="{$config->ggmailing_ssl_port}"|cond="$config->ggmailing_ssl == 'Y'" style="width:50px;" />)
-						<p class="ggm_example">무료서버 SSL 보안전송 사용시 포트 20080 을 반드시 입력합니다. 20080포트를 지원하지 않으면 SSL 보안전송 미사용(80번 포트)을 사용합니다.</p>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label>메일 발송 서버</label> : <!--@if($config->ggmailing_ssl == 'Y')-->https://<!--@else-->http://<!--@end-->{$config->ggmailing_serv_url} (port:<!--@if($config->ggmailing_ssl == 'Y' && $config->ggmailing_ssl_port)-->{$config->ggmailing_ssl_port}<!--@elseif($config->ggmailing_ssl == 'N')-->80<!--@end-->)
+						<label>SSL 보안전송 미사용</label>{@ */ }
+						<input type="hidden" id="myPort" name="ggmailing_ssl_port" value="443" />
+						<p class="ggm_example">메일 발송 서버를 공란으로 비워두시면 모듈이 작동하지 않습니다.</p>
+						
 					</td>
 				</tr>
 				<tr>
@@ -65,7 +62,8 @@
 							$domain = str_replace('www.','',$domain);
 						}
 						<p>
-							{$lang->authcenter} : <a href="https://woorimail.com:20080/reg_serial" target="_blank">https://woorimail.com:20080/reg_serial</a> {$lang->insert_url} : {$domain}
+							{$lang->authcenter} : <a href="https://woorimail.com:20080/reg_serial" target="_blank">https://woorimail.com/reg_serial</a> <br />
+							{$lang->insert_url} : {$domain}
 						</p>
 					</td>
 				</tr>
@@ -77,7 +75,9 @@
 						<input type="radio" name="type_server" value="Y" checked="checked"|cond="$config->type_server == 'Y'" /> 
 						<label>전용 채널/서버 사용함(유료)</label>
 						<p class="ggm_example">
-							전용 서버를 설치하여 사용할지 여부를 선택합니다.
+							전용 서버를 설치하여 사용할지 여부를 선택합니다.<br />
+							전용 채널은 메일을 전송할 때 나의 도메인으로 이메일을 전송하게 해 줍니다.<br />
+							(무료 채널 : woorimail.com)
 						</p>
 					</td>
 				</tr>

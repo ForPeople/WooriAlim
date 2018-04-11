@@ -19,7 +19,7 @@ $module_list = $oModuleModel->getModuleList();
 	<!--@end-->
 </div>
 
-<div class="woorimail">
+<div class="woorimail" style="display:none;">
 	<div class="cols">
 		<div class="col2">
 			<h3>{$lang->mailing_status} <a href="//woorimail.com/payment" target="_blank">[결제 바로가기]</a></h3>
@@ -71,10 +71,10 @@ $module_list = $oModuleModel->getModuleList();
 <nav id="ggtopMenu" >
     <ul>
 		<!--@if($config->accept_agree == 'Y')-->
-        <li class="ggtopMenuLi" style="display:none;" id="ggnotice">
+        <li class="ggtopMenuLi" id="ggnotice">
             <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminNotice')}">공지</a>
         </li>
-        <li style="display:none;" id="ggnotice2">|</li>
+        <li id="ggnotice2">|</li>
 		<!--@end-->
         <li class="ggtopMenuLi">
             <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminIndex')}">{$lang->manual}</a>
@@ -86,8 +86,8 @@ $module_list = $oModuleModel->getModuleList();
         </li>
         <li>|</li>
 
-		<!--@if($config->accept_agree == 'Y')-->
-        <li class="ggtopMenuLi" style="display:none;" id="ggmail">
+		<!--@if($config->accept_agree == 'Y' && $config->ggmailing_authkey)-->
+        <li class="ggtopMenuLi" id="ggmail">
             <a class="ggmenuLink" href="#">대량 EMAIL</a>
             <ul class="ggsubmenu">
                 <li><a class="ggsubmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminInsert')}">{$lang->insert_mail}</a></li>
@@ -95,7 +95,7 @@ $module_list = $oModuleModel->getModuleList();
                 <li><a class="ggsubmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminSend')}">{$lang->send_list}</a></li>
             </ul>
         </li>
-        <li style="display:none;" id="ggmail2">|</li>
+        <li id="ggmail2">|</li>
 
         <li class="ggtopMenuLi" cond="0">
             <a class="ggmenuLink" href="#">대량 SMS/LMS/MMS</a>
@@ -107,18 +107,23 @@ $module_list = $oModuleModel->getModuleList();
         </li>
         <li cond="0">|</li>
 
-        <li class="ggtopMenuLi" style="display:none;" id="ggmember">
+        <li class="ggtopMenuLi" id="ggmember">
             <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminInsertmembers')}">{$lang->insertmembers}</a>
         </li>
-        <li style="display:none;" id="ggmember2">|</li>
+        <li id="ggmember2">|</li>
 
-        <li class="ggtopMenuLi" style="display:none;" id="boardmailing">
+        <li class="ggtopMenuLi" id="boardmailing">
             <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminBoardMailing')}">{$lang->boardmailing}</a>
         </li>
-        <li style="display:none;" id="boardmailing2">|</li>
+        <li id="boardmailing2">|</li>
 
-		<li class="ggtopMenuLi" style="display:none;" id="donotsend">
-            <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminDonotsend')}">{$lang->donotsendlist}</a>
+		<li class="ggtopMenuLi" id="donotsend">
+            <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminDonotsend')}">{$lang->donotsend_list}</a>
+        </li>
+		<li id="donotsend2">|</li>
+
+        <li class="ggtopMenuLi" id=getStatus>
+        	<a class="ggmenuLink" href="#" onclick="getStatus();return false;">서버상황</a>
         </li>
 		<!--@end-->
     </ul>
