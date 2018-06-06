@@ -12,14 +12,9 @@ $module_list = $oModuleModel->getModuleList();
 }
 <div class="x_page-header">
 	<h1>{$lang->woorialim} v<!--@foreach($module_list as $key => $val)--><!--@if($val->path == './modules/ggmailing/')-->{$val->version}{@ $current_ver = $val->version; }<!--@end--><!--@end--></h1>
-	<!--@if($current_ver < $authcheck->check_ver)-->
-	<h3>최신버전 : v{$authcheck->check_ver}
-	<a href="{$authcheck->check_file}">[다운로드]</a>
-	</h3>
-	<!--@end-->
 </div>
 
-<div class="woorimail" style="display:none;">
+<div class="woorimail" style="">
 	<div class="cols">
 		<div class="col2">
 			<h3>{$lang->mailing_status} <a href="//woorimail.com/payment" target="_blank">[결제 바로가기]</a></h3>
@@ -27,19 +22,19 @@ $module_list = $oModuleModel->getModuleList();
 				<table class="table_line">
 					<tr>
 						<th scope="col">{$lang->pay_point}</th>
-						<td><div id="pay_point"></div></td>
+						<td><div id="pay_point">0</div></td>
 					</tr>
 					<tr>
 						<th scope="col">{$lang->etc_point}</th>
-						<td><div id="etc_point"></div></td>
+						<td><div id="etc_point">0</div></td>
 					</tr>
 					<tr>
 						<th scope="col">{$lang->free_point}</th>
-						<td><div id="free_point"></div></td>
+						<td><div id="free_point">0</div></td>
 					</tr>
 					<tr>
 						<th scope="col">{$lang->promotion_point}</th>
-						<td><div id="event_point"></div></td>
+						<td><div id="event_point">0</div></td>
 					</tr>
 				</table>
 			</div>
@@ -49,16 +44,16 @@ $module_list = $oModuleModel->getModuleList();
 			<div class="colwrap2">
 				<div class="statewrap">
 					<div class="state_area">
-						<strong>{$lang->authcheck}</strong>
-						<div class="icon"><span class="error"><div id="ggauth_check"></div></span></div>
+						<strong>{$lang->authcheck}<a href="#" onclick="getStatus();return false;">[갱신]</a></strong>
+						<div class="icon"><span class="error"><div id="ggauth_check"><a href="#" onclick="getStatus();return false;">[확인]</a></div></span></div>
 					</div>
 					<div class="state_area">
 						<strong>{$lang->paymail_ready}</strong>
-						<div class="num"><div id="paymail_wait"></div></div>
+						<div class="num"><div id="paymail_wait">0</div></div>
 					</div>
 					<div class="state_area">
 						<strong>{$lang->freemail_ready}</strong>
-						<div class="num"><div id="freemail_wait"></div></div>
+						<div class="num"><div id="freemail_wait">0</div></div>
 					</div>
 				</div>
 			</div>
@@ -66,7 +61,6 @@ $module_list = $oModuleModel->getModuleList();
 
 	</div>
 </div>
-
 
 <nav id="ggtopMenu" >
     <ul>
@@ -120,13 +114,10 @@ $module_list = $oModuleModel->getModuleList();
 		<li class="ggtopMenuLi" id="donotsend">
             <a class="ggmenuLink" href="{getUrl('','module','admin','act','dispGgmailingAdminDonotsend')}">{$lang->donotsend_list}</a>
         </li>
-		<li id="donotsend2">|</li>
-
-        <li class="ggtopMenuLi" id=getStatus>
-        	<a class="ggmenuLink" href="#" onclick="getStatus();return false;">서버상황</a>
-        </li>
 		<!--@end-->
     </ul>
 </nav>
+
+<br />
 
 <div class="ggm_mailing">

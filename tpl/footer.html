@@ -27,9 +27,13 @@
 			url: url,
 			type: 'POST',
 			data: formData,
-			async: false,
+			async: true,
+			beforeSend: function (data) {
+				jQuery(".wfsr").show();
+			},
 			success: function (data) {
 				//alert(data);
+				jQuery(".wfsr").hide();
 				var result = JSON.parse(data);
 				if(result.ggauth_check == 'OK') {
 					document.getElementById("ggauth_check").innerHTML = "OK";
