@@ -65,15 +65,19 @@
 						type: 'POST',
 						data: formData,
 						async: true,
+						beforeSend: function (data) {
+							jQuery(".wfsr").show();
+						},
 						success: function (data) {
 							//alert(data);
+							jQuery(".wfsr").hide();
 							var result = JSON.parse(data);
 							if(result.is_sendok == 'Y') document.getElementById('ggstatus_{$key}').innerHTML = '{$lang->send_complete}';
 							else if(result.is_sendok == 'B') document.getElementById('ggstatus_{$key}').innerHTML = '대기열';
 							else if(result.is_sendok == 'W') document.getElementById('ggstatus_{$key}').innerHTML = '전송대기';
 							else if(result.is_sendok == 'S') document.getElementById('ggstatus_{$key}').innerHTML = '전송중';
 							else if(result.is_sendok == 'E') document.getElementById('ggstatus_{$key}').innerHTML = '오류';
-							else if(!result) document.getElementById('ggstatus_{$key}').innerHTML = '서버점검중';
+							//else if(!result) document.getElementById('ggstatus_{$key}').innerHTML = '서버점검중';
 							else jQuery("#ggsend_{$key}").show();
 						},
 						global: false,
@@ -85,7 +89,18 @@
 				})
 			</script>
 			<td width="60" class="center">
-				<div id="ggstatus_{$key}"></div>
+				{@
+					$oGgmailingAdminModel = getAdminModel('ggmailing');
+					$ggstatus_key = $oGgmailingAdminModel->getGgmailingAdminSendEmail();
+				}
+				<!--@if($ggstatus_key->data[0]->is_sendok == 'W')-->
+				{@ $is_sendok_msg = $lang->send_complete; }
+				<!--@elseif($ggstatus_key->data[0]->is_sendok == 'N')-->
+				{@ $is_sendok_msg = '대기'; }
+				<!--@end-->
+
+
+				<div id="ggstatus_{$key}">{$is_sendok_msg}</div>
 				<!--@if(Context::get('type')!='status')-->
 				<form action="./" method="post" id="ggsend_{$key}" style="display:none;">
 				<input type="hidden" name="module" value="admin" />
