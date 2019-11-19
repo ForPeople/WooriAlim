@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) ForPeople <http://forpeople.co.kr> */
+/* Copyright (C) ForPeople <https://forpeople.co.kr> */
 
 /**
  * @class  ggmailingAdminView
@@ -174,9 +174,10 @@ class ggmailingAdminView extends ggmailing
 	function dispGgmailingAdminInsert() 
 	{
 		$is_update = Context::get('ggmailing_document_srl');
+		$args = new stdClass();
 		if($is_update) {
 			$args->ggmailing_document_srl = $is_update;
-			$oGgmailingAdminModel = &getAdminModel('ggmailing');
+			$oGgmailingAdminModel = getAdminModel('ggmailing');
 			$output = $oGgmailingAdminModel->getGgmailingAdminEmail($args);
 			foreach($output->data as $key => $val) {
 				Context::set('args', $val);

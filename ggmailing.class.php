@@ -17,7 +17,7 @@ class ggmailing extends ModuleObject {
 		$oModuleController->insertTrigger('document.insertDocument','ggmailing','controller','triggerBoardmailing','after');
 		$oModuleController->insertTrigger('comment.insertComment','ggmailing','controller','triggerWard','after');
 		$oModuleController->insertTrigger('ncenterlite._insertNotify','ggmailing','controller','triggerNotiliteGgmailing','after');
-		return new Object();
+		return new BaseObject();
 	}
 
 	function checkUpdate() {
@@ -43,7 +43,7 @@ class ggmailing extends ModuleObject {
 			$oModuleController->insertTrigger('ncenterlite._insertNotify','ggmailing','controller','triggerNotiliteGgmailing','after');
 		}
 		$this->moduleInstall();
-		return new Object(0, 'success_updated');
+		return new BaseObject(0, 'success_updated');
 	}
 	
 	function moduleUninstall() {
@@ -59,7 +59,7 @@ class ggmailing extends ModuleObject {
 		if($oModuleModel->getTrigger('ncenterlite._insertNotify','ggmailing','controller','triggerNotiliteGgmailing','after')) {
 			$oModuleController->deleteTrigger('ncenterlite._insertNotify','ggmailing','controller','triggerNotiliteGgmailing','after');
 		}
-		return new Object();
+		return new BaseObject();
 	}
 
 	function recompileCache() {

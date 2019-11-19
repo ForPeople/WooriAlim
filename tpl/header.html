@@ -4,14 +4,13 @@
 
 {@
 // 버전 구하기
-$args = new stdClass();
-$args->path = './modules/ggmailing';
+$path = './modules/ggmailing/';
 $oAutoinstallModel = getModel('autoinstall');
 $oModuleModel = getModel('module');
 $module_list = $oModuleModel->getModuleList();
 }
 <div class="x_page-header">
-	<h1>{$lang->woorialim} v<!--@foreach($module_list as $key => $val)--><!--@if($val->path == './modules/ggmailing/')-->{$val->version}{@ $current_ver = $val->version; }<!--@end--><!--@end--></h1>
+	<h1>{$lang->woorialim} v<!--@foreach($module_list as $key => $val)--><!--@if($val->path == $path)-->{$val->version}{@ $current_ver = $val->version; }<!--@end--><!--@end--></h1>
 </div>
 
 <div class="woorimail" style="">
