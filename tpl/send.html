@@ -91,7 +91,7 @@
 			<td width="60" class="center">
 				{@
 					$oGgmailingAdminModel = getAdminModel('ggmailing');
-					$ggstatus_key = $oGgmailingAdminModel->getGgmailingAdminSendEmail();
+					$ggstatus_key = $oGgmailingAdminModel->getGgmailingAdminSendEmail($args=null);
 				}
 				<!--@if($ggstatus_key->data[0]->is_sendok == 'W')-->
 				{@ $is_sendok_msg = $lang->send_complete; }
