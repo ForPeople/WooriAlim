@@ -179,12 +179,12 @@ class ggmailingAdminView extends ggmailing
 			$args->ggmailing_document_srl = $is_update;
 			$oGgmailingAdminModel = getAdminModel('ggmailing');
 			$output = $oGgmailingAdminModel->getGgmailingAdminEmail($args);
-			foreach($output->data as $key => $val) {
-				Context::set('args', $val);
+			foreach($output->data as $val) {
+				Context::set('gg_args', $val);
 			}
 			$output = $oGgmailingAdminModel->getGgmailingAdminGateway($args);
-			foreach($output->data as $key => $val) {
-				Context::set('gw_args',$val);
+			foreach($output->data as $val) {
+				Context::set('gw_args', $val);
 			}
 		}
 

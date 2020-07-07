@@ -12,57 +12,57 @@ class ggmailingAdminModel extends ggmailing {
 	function init() {
 	}
 
-	function getGgmailingAdminList($args){
+	function getGgmailingAdminList($args = null){
 		$output = executeQueryArray('ggmailing.getGgmailingAdminList', $args);
 		return $output;
 	}
 
-	function getGgmailingAdminSend($args){
+	function getGgmailingAdminSend($args = null){
 		$output = executeQueryArray('ggmailing.getGgmailingAdminSend', $args);
 		return $output;
 	}
-	function getGgmailingAdminSmsList($args){
+	function getGgmailingAdminSmsList($args = null){
 		$output = executeQueryArray('ggmailing.getGgmailingAdminSmsList', $args);
 		return $output;
 	}
-	function getGgmailingAdminSms($args){
+	function getGgmailingAdminSms($args = null){
 		$output = executeQueryArray('ggmailing.getGgmailingAdminSms', $args);
 		return $output;
 	}
 
-	function getGgmailingAdminSmsSend($args){
+	function getGgmailingAdminSmsSend($args = null){
 		$output = executeQueryArray('ggmailing.getGgmailingAdminSmsSend', $args);
 		return $output;
 	}
-	function getEmailAddrList($args){
+	function getEmailAddrList($args = null){
 		$output = executeQueryArray('ggmailing.getEmailAddrList', $args);
 		return $output;
 	}
-	function getEmailAddrAllowList($args){
+	function getEmailAddrAllowList($args = null){
 		$output = executeQueryArray('ggmailing.getEmailAddrAllowList', $args);
 		return $output;
 	}
-	function getGroupEmailAddrList($args){
+	function getGroupEmailAddrList($args = null){
 		$output = executeQueryArray('ggmailing.getGroupEmailAddrList', $args);
 		return $output;
 	}
-	function getGroupEmailAddrAllowList($args){
+	function getGroupEmailAddrAllowList($args = null){
 		$output = executeQueryArray('ggmailing.getGroupEmailAddrAllowList', $args);
 		return $output;
 	}
-	function getGgmailingAdminEmail($args){
+	function getGgmailingAdminEmail($args = null){
 		$output = executeQueryArray('ggmailing.getGgmailingAdminEmail', $args);
 		return $output;
 	}
-	function getGgmailingAdminSendEmail($args){
+	function getGgmailingAdminSendEmail($args = null){
 		$output = executeQueryArray('ggmailing.getGgmailingAdminSendEmail', $args);
 		return $output;
 	}
-	function getGgmailingAdminMemberList($args){
+	function getGgmailingAdminMemberList($args = null){
 		$output = executeQueryArray('ggmailing.getGgmailingAdminMemberList', $args);
 		return $output;
 	}
-	function getGgmailingAdminGateway($args){
+	function getGgmailingAdminGateway($args = null){
 		$output = executeQueryArray('ggmailing.getGateway', $args);
 		return $output;
 	}

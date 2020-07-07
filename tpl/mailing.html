@@ -11,7 +11,7 @@
   <input type="hidden" name="module" value="admin" />
   <!--@if(Context::get('ggmailing_document_srl'))-->
   <input type="hidden" name="act" value="procGgmailingAdminUpdate" />
-  <input type="hidden" name="type_replymail" value="F"|cond="$args->ggmailing_sender_email == 'NOREPLY@woorimail.com' || !$args->ggmailing_sender_email" value="Y"|cond="$args->ggmailing_sender_email == 'SERVICE@woorimail.com'" />
+  <input type="hidden" name="type_replymail" value="F"|cond="$gg_args->ggmailing_sender_email == 'NOREPLY@woorimail.com' || !$gg_args->ggmailing_sender_email" value="Y"|cond="$gg_args->ggmailing_sender_email == 'SERVICE@woorimail.com'" />
   <!--@else-->
   <input type="hidden" name="act" value="procGgmailingAdminInsert" />
   <!--@end-->
@@ -23,7 +23,7 @@
 			<tr>
 				<th rowspan="2">{$lang->type_replymail}</th>
 				<td>
-					<input type="radio" name="type_replymail" value="F" checked="checked"|cond="$args->ggmailing_sender_email == 'NOREPLY@woorimail.com' || !$args->sender_email" />
+					<input type="radio" name="type_replymail" value="F" checked="checked"|cond="$gg_args->ggmailing_sender_email == 'NOREPLY@woorimail.com' || !$gg_args->sender_email" />
 					<label>{$lang->type_replymail_f}</label>
 					<p class="ggm_example">
 						이메일 전송시 회신이 되지 않습니다.<br />
@@ -33,7 +33,7 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="radio" name="type_replymail" value="Y" checked="checked"|cond="$args->ggmailing_sender_email == 'SERVICE@woorimail.com'" />
+					<input type="radio" name="type_replymail" value="Y" checked="checked"|cond="$gg_args->ggmailing_sender_email == 'SERVICE@woorimail.com'" />
 					<label>회신가능 대량메일</label>
 					<p class="ggm_example">
 						이메일 전송시 우리메일(http://woorimail.com)에 가입한 정보 이메일 주소로 회신주소가 설정됩니다.<br />
@@ -46,7 +46,7 @@
 			<tr>
 				<th>닉네임 설정</th>
 				<td>
-					<input style="margin:auto 0" type="text" name="sender_nickname" value="{$args->ggmailing_sender_nickname}" />
+					<input style="margin:auto 0" type="text" name="sender_nickname" value="{$gg_args->ggmailing_sender_nickname}" />
 					<xmp>이메일을 받을때 보낸사람 정보 "닉네임<NOREPLY@woorimail.com>" 형식에서 사용됩니다.</xmp>
 				</td>
 			</tr>
@@ -56,7 +56,7 @@
 				<th>회신받는 이메일 주소 설정</th>
 				<td>
 					<input type="hidden" name="type_replymail" value="G" />
-					<input type="text" name="ggmailing_sender_email" value="{$args->ggmailing_sender_email}" />
+					<input type="text" name="ggmailing_sender_email" value="{$gg_args->ggmailing_sender_email}" />
 					<label>예)webmaster@나의전용서버도메인.com</label>
 					<p class="ggm_example">
 						전용 서버일때만 사용 가능합니다.<br />
@@ -67,7 +67,7 @@
 			<tr>
 				<th>보내는 주소 설정</th>
 				<td>
-					from : <input style="margin:auto 0;width:150px;" type="text" name="sender_nickname" value="{$args->ggmailing_sender_nickname}" placeholder="닉네임" /> <<input style="margin:auto 0;width:100px;" type="text" name="is_nick" value="{$gw_args->ggmailing_is_nick}" placeholder="webmaster" />@<input style="margin:auto 0;width:150px;" type="text" name="is_domain" value="{$gw_args->ggmailing_is_domain}" placeholder="domain.com" />>
+					from : <input style="margin:auto 0;width:150px;" type="text" name="sender_nickname" value="{$gg_args->ggmailing_sender_nickname}" placeholder="닉네임" /> <<input style="margin:auto 0;width:100px;" type="text" name="is_nick" value="{$gw_args->ggmailing_is_nick}" placeholder="webmaster" />@<input style="margin:auto 0;width:150px;" type="text" name="is_domain" value="{$gw_args->ggmailing_is_domain}" placeholder="domain.com" />>
 					<xmp>이메일을 받을때 보낸사람 정보 "닉네임<webmaster@domain.com>" 형식에서 사용됩니다.</xmp>
 				</td>
 			</tr>
@@ -80,7 +80,7 @@
 			<tr>
 				<th>{$lang->title}<br />(한글100자이내)</th>
 				<td>
-					<input style="margin:auto 0" type="text" name="title" value="{$args->ggmailing_title}" class="input_text" maxlength="100" />
+					<input style="margin:auto 0" type="text" name="title" value="{$gg_args->ggmailing_title}" class="input_text" maxlength="100" />
 				</td>
 			</tr>
 			<tr>
@@ -92,21 +92,23 @@
 					 // 에디터 스킨 목록을 구함
 					 Context::set('editor_skin_list', $oEditorModel->getEditorSkinList());
 					 
+					 $option = new stdClass();
+					 
 					 // 에디터를 받음
 					 $option->primary_key_name = 'primary_key';
 					 $option->content_key_name = 'content';
 					 $option->allow_fileupload = true;
 					 $option->enable_autosave = false; 
 					 $option->enable_default_component = true;
-					 $option->enable_component = false;
+					 $option->enable_component = true;
 					 $option->resizable = true;
 					 $option->height = 300; 
 					 $option->skin = "CKEditor" ? "CKEditor" : "xpresseditor";
-					 $editor = $oEditorModel->getEditor($args->ggmailing_document_srl, $option);
+					 $editor = $oEditorModel->getEditor($gg_args->ggmailing_document_srl, $option);
 					 //$editor->editor_sequence;
 					}
-					<input type="hidden" name="primary_key" id="primary_key" value="{$args->ggmailing_document_srl}">
-					<input type="hidden" name="content" id="content" value="{htmlspecialchars($args->ggmailing_content)}">
+					<input type="hidden" name="primary_key" id="primary_key" value="{$gg_args->ggmailing_document_srl}">
+					<input type="hidden" name="content" id="content" value="{htmlspecialchars($gg_args->ggmailing_content)}">
 
 					{$editor}
 				</td>
