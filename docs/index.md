@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## 우리알림
 
 You can use the [editor on GitHub](https://github.com/ForPeople/WooriAlim/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
 
